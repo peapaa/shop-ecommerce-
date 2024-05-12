@@ -1,0 +1,39 @@
+.regiterContainer {
+  width: 420px;
+  margin: auto !important;
+  position: relative;
+  top: 150px;
+  background-color: rgb(252 228 236);
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.regiterTitle {
+  text-align: center;
+  padding-top: 20px;
+  margin-top: 0;
+}
+
+.regiterForm {
+  padding: 12px 20px;
+}
+
+.regiterBtn {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.regiterBtnSubmit {
+  background-color: rgb(231, 50, 114);
+}
+.regiterBtnSubmit span {
+  padding: 0 60px !important;
+}
+.regiterBtnSubmit:hover {
+  background-color: rgb(231, 50, 114) !important;
+}
+
+.regiterText {
+  font-size: 16px;
+  font-weight: 500;
+}

@@ -1,0 +1,42 @@
+.adminContainer {
+  margin: 12px 12px;
+}
+
+.adminHeader {
+  background-color: rgb(252 228 236);
+  border: 1px solid rgba(221, 101, 141, 0.4);
+  border-radius: 5px;
+  text-align: center;
+  color: rgb(231 24 93);
+  margin: 12px;
+}
+
+.adminHeaderTitle {
+  margin: 12px 0;
+}
+
+.adminContent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.adminContentDetail {
+  background-color: rgb(252 228 236);
+  border: 1px solid rgba(221, 101, 141, 0.4);
+  border-radius: 5px;
+  text-align: center;
+  color: rgb(231 24 93);
+  padding: 8px 100px;
+  margin: 12px;
+  cursor: pointer;
+}
+
+.icon {
+  font-size: 40px;
+}
+
+.adminContainer li {
+  list-style: none !important;
+}

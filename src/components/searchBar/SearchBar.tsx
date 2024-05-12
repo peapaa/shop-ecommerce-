@@ -1,4 +1,6 @@
 import { useState } from "react";
+import styles from "../../App.module.scss";
+import { Input } from "antd";
 
 // Search Data
 const searchData = [
@@ -47,35 +49,35 @@ const SearchBar = () => {
   const filterSearchData = searchData
     .filter((obj) => obj.name.toLowerCase().includes(search))
     .slice(0, 8);
-  console.log("filterSearchData", filterSearchData);
+  // console.log("filterSearchData", filterSearchData);
   return (
-    <div className="search">
+    <div className={styles.search}>
       {/* search input  */}
-      <div className="search__input">
-        <input
+      <div className={styles.search__input}>
+        <Input
           type="text"
           placeholder="Search here"
           onChange={(e) => setSearch(e.target.value)}
-          className="  "
+          style={{ height: 26 }}
         />
       </div>
 
       {/* search drop-down  */}
-      <div className="search__drop">
+      <div className={styles.search__drop}>
         {search && (
-          <div className="search__drop-down">
+          <div className={styles.search__dropDown}>
             {filterSearchData.length > 0 ? (
               <>
                 {filterSearchData.map((item, index) => {
                   return (
-                    <div key={index} className="search__drop-down-item">
-                      <div className="search__drop-down-item-form">
+                    <div key={index} className={styles.search__dropItem}>
+                      <div className={styles.search__dropForm}>
                         <img
-                          className="search__drop-down-item-image"
+                          className={styles.search__dropImage}
                           src={item.image}
                           alt=""
                         />
-                        <span className="search__drop-down-item-name">
+                        <span className={styles.search__dropName}>
                           {item.name}
                         </span>
                       </div>
@@ -85,9 +87,9 @@ const SearchBar = () => {
               </>
             ) : (
               <>
-                <div className="search__drop-down-icon">
+                <div className={styles.search__dropIcon}>
                   <img
-                    className="search__drop-down-icon-image"
+                    className={styles.search__dropImage}
                     src="https://cdn-icons-png.flaticon.com/128/10437/10437090.png"
                     alt="img"
                   />

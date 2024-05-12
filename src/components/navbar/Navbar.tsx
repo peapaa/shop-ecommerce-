@@ -1,41 +1,77 @@
-import React from "react";
-import { Link } from "react-router-dom";
 import SearchBar from "../searchBar/SearchBar";
-
+import styles from "../../App.module.scss";
+import "./Navbar.css";
+import { Link, useNavigate } from "react-router-dom";
+import { User } from "../../pages/registration/Login";
 const Navbar = () => {
-  return (
-    <div className="navbar">
-      <div className="navbar-logo">Shoppee</div>
+  const userString = localStorage.getItem("user");
+  const user: User | null = userString ? JSON.parse(userString) : null;
 
-      <div className="navbar-menu">
-        {/* Home */}
-        <span>
-          <Link to={"/"}>Home</Link>
-        </span>
-        {/* All Product */}
-        <span>
-          <Link to={"/allproduct"}>All Product</Link>
-        </span>
-        {/* Signup */}
-        <span>
-          <Link to={"/signup"}>Signup</Link>
-        </span>
-        {/* User */}
-        <span>
-          <Link to={"/"}>Kamal</Link>
-        </span>
-        {/* Admin */}
-        {/* <span>
-            </span> */}
-        {/* logout */}
-        {/* <span>
-            </span> */}
-        {/* Cart */}
-        <span>
-          <Link to={"/cart"}></Link>
-        </span>
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
+  return (
+    <div className={styles.navbar}>
+      <div className={styles.navbarLogo}>
+        <Link to={"/"} style={{ textDecoration: "none", color: "white" }}>
+          Shoppee
+        </Link>
       </div>
-      <div className="navbar-search">
+
+      <ul className={styles.navbarMenu}>
+        <li>
+          <Link to={"/"}>Home</Link>
+        </li>
+
+        <li>
+          <Link to={"/allproduct"}>All Product</Link>
+        </li>
+
+        {!user ? (
+          <li>
+            <Link to={"/signup"}>Signup</Link>
+          </li>
+        ) : (
+          ""
+        )}
+
+        {!user ? (
+          <li>
+            <Link to={"/login"}>Login</Link>
+          </li>
+        ) : (
+          ""
+        )}
+
+        {user && user?.role === "user" && (
+          <li>
+            <Link to={"/user-dashboard"}>{user?.name}</Link>
+          </li>
+        )}
+        {user?.role === "admin" && (
+          <li>
+            <Link to={"/admin-dashboard"}>{user?.name}</Link>
+          </li>
+        )}
+
+        {user && (
+          <li>
+            <a href="#" onClick={logout}>
+              Logout
+            </a>
+          </li>
+        )}
+
+        {user && (
+          <li>
+            <Link to={"/cart"}>Cart(0)</Link>
+          </li>
+        )}
+      </ul>
+      <div className={styles.navbarSearch}>
         <SearchBar />
       </div>
     </div>

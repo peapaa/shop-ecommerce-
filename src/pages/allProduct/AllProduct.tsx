@@ -1,7 +1,8 @@
-import { Button, Card } from "antd";
-import styles from "../../App.module.scss";
 import { useNavigate } from "react-router";
-const { Meta } = Card;
+import Layout from "../../components/layout/Layout";
+import { Button, Card } from "antd";
+import Meta from "antd/es/card/Meta";
+import styles from "../../App.module.scss";
 // productData
 const productData = [
   {
@@ -86,54 +87,51 @@ const productData = [
   },
 ];
 
-const HomePageProductCard = () => {
+const AllProduct = () => {
   const navigate = useNavigate();
   return (
-    <div className={styles.product__card}>
-      {/* Heading  */}
-      <div className={styles.product__cardTitle}>
-        <h1>Bestselling Products</h1>
-      </div>
-
-      {/* main  */}
-      <section className={styles.product__card__container}>
-        {productData.map((item, index) => {
-          const { image, title, price } = item;
-          return (
-            <Card
-              key={index}
-              className={styles.product__card__item}
-              cover={
-                <img
-                  onClick={() => navigate("/productinfo")}
-                  alt="product"
-                  src={image}
-                  className={styles.product__card__item__img}
-                />
-              }
-            >
-              <Meta
-                title={
-                  <>
-                    <h1 className={styles.product__card__itemName}>
-                      {title.substring(0, 25)}
-                    </h1>
-                    <h1 className={styles.product__card__itemPrice}>
-                      ${price}
-                    </h1>
-
-                    <Button className={styles.product__card__itemBtn}>
-                      Add To Cart
-                    </Button>
-                  </>
+    <Layout>
+      <div>
+        <h1 style={{ textAlign: "center" }}>All Products</h1>
+        <div className={styles.product__card__container}>
+          {productData.map((item, index) => {
+            const { image, title, price } = item;
+            return (
+              <Card
+                key={index}
+                className={styles.product__card__item}
+                cover={
+                  <img
+                    onClick={() => navigate("/productinfo")}
+                    alt="product"
+                    src={image}
+                    className={styles.product__card__item__img}
+                  />
                 }
-              />
-            </Card>
-          );
-        })}
-      </section>
-    </div>
+              >
+                <Meta
+                  title={
+                    <>
+                      <h1 className={styles.product__card__itemName}>
+                        {title.substring(0, 25)}
+                      </h1>
+                      <h1 className={styles.product__card__itemPrice}>
+                        ${price}
+                      </h1>
+
+                      <Button className={styles.product__card__itemBtn}>
+                        Add To Cart
+                      </Button>
+                    </>
+                  }
+                />
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </Layout>
   );
 };
 
-export default HomePageProductCard;
+export default AllProduct;

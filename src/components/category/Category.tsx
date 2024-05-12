@@ -1,4 +1,5 @@
 // category
+import styles from "../../App.module.scss";
 const category = [
   {
     image: "https://cdn-icons-png.flaticon.com/256/4359/4359963.png",
@@ -36,18 +37,18 @@ const category = [
 
 const Category = () => {
   return (
-    <div className="category">
-      <div className="category__list">
+    <div className={styles.category}>
+      <div className={styles.category__list}>
         {category.map((item, index) => {
           return (
-            <div key={index} className="category__item">
+            <div key={index} className={styles.category__item}>
               <img
-                className="category__item-image"
+                className={styles.category__itemImage}
                 src={item.image}
                 alt="img"
               />
 
-              <h1 className="category__item-name">{item.name}</h1>
+              <h1 className={styles.category__itemName}>{item.name}</h1>
             </div>
           );
         })}

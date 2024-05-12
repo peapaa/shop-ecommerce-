@@ -1,0 +1,99 @@
+.userContainer {
+  padding: 20px 40px;
+}
+
+.userContainerTop {
+  width: 100%;
+  padding: 20px 0;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid rgba(252, 228, 236, 1.1);
+  background-color: rgb(252 228 236);
+}
+
+.OrderTitle {
+  margin-left: 80px;
+}
+
+.orderContainer {
+  margin: 20px 80px;
+  border: 1px solid rgba(252, 228, 236, 1.1);
+  display: flex;
+  border-radius: 5px;
+}
+
+.orderInfoLeft {
+  background-color: rgb(252 228 236);
+  padding: 20px 20px;
+  width: 320px;
+}
+
+.orderInfoRight {
+  padding: 20px 20px;
+  width: 100%;
+}
+
+.orderProductImg {
+  width: 80px;
+  border-radius: 3px;
+  object-fit: contain;
+}
+
+.orderProductInfo {
+  display: flex;
+}
+
+.orderProductDetail {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  margin-left: 20px;
+}
+
+.orderInfoProductPrice {
+  margin-left: 120px;
+}
+.orderInformation {
+  margin-bottom: 12px;
+}
+
+@media only screen and (min-width: 850px) and (max-width: 1000px) {
+  .orderInfoProductPrice {
+    margin-left: 40px;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  .orderContainer {
+    flex-direction: column;
+  }
+  .orderInfoLeft {
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+  }
+  .orderInfoRight {
+    width: 100%;
+  }
+  .orderInfoProductPrice {
+    margin-left: 0;
+  }
+}
+@media only screen and (max-width: 650px) {
+  .orderProductInfo {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .orderProductDetail {
+    margin-left: 0;
+    flex-direction: column;
+  }
+  .orderContainer {
+    margin: 0;
+  }
+  .orderInfoRight {
+    padding: 10px 0;
+  }
+}

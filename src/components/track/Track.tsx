@@ -1,9 +1,11 @@
+import styles from "../../App.module.scss";
+
 const Track = () => {
   return (
-    <div className="track__container">
-      <div className="track__item">
+    <div className={styles.track__container}>
+      <div className={styles.track__item}>
         <svg
-          className="track__item-img"
+          className={styles.track__itemImg}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -17,14 +19,16 @@ const Track = () => {
           />
         </svg>
 
-        <h2 className="track__item-title">Premium Tshirts</h2>
-        <p className="track__item-des">Our T-Shirts are 100% made of cotton.</p>
+        <h2 className={styles.track__itemTitle}>Premium Tshirts</h2>
+        <p className={styles.track__itemDes}>
+          Our T-Shirts are 100% made of cotton.
+        </p>
       </div>
 
       {/* Track 2 */}
-      <div className="track__item">
+      <div className={styles.track__item}>
         <svg
-          className="track__item-img"
+          className={styles.track__itemImg}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -38,14 +42,16 @@ const Track = () => {
           />
         </svg>
 
-        <h2 className="track__item-title">Premium Tshirts</h2>
-        <p className="track__item-des">Our T-Shirts are 100% made of cotton.</p>
+        <h2 className={styles.track__itemTitle}>Premium Tshirts</h2>
+        <p className={styles.track__itemDes}>
+          Our T-Shirts are 100% made of cotton.
+        </p>
       </div>
 
       {/* Track 3  */}
-      <div className="track__item">
+      <div className={styles.track__item}>
         <svg
-          className="track__item-img"
+          className={styles.track__itemImg}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -59,8 +65,10 @@ const Track = () => {
           />
         </svg>
 
-        <h2 className="track__item-title">Premium Tshirts</h2>
-        <p className="track__item-des">Our T-Shirts are 100% made of cotton.</p>
+        <h2 className={styles.track__itemTitle}>Premium Tshirts</h2>
+        <p className={styles.track__itemDes}>
+          Our T-Shirts are 100% made of cotton.
+        </p>
       </div>
     </div>
   );
