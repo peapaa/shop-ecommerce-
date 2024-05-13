@@ -17,11 +17,17 @@ export interface User {
   time: Date;
   date: string;
 }
+
+interface UserLogin {
+  email: string;
+  password: string;
+}
+
 const Login = () => {
   const context = useContext(myContext) as Props;
   const { loading, setLoading } = context;
   const navigate = useNavigate();
-  const [userLogin, setUserLogin] = useState({
+  const [userLogin, setUserLogin] = useState<UserLogin>({
     email: "",
     password: "",
   });
@@ -93,14 +99,18 @@ const Login = () => {
           label="Email"
           rules={[
             { required: true, message: "Please input your email!" },
-            { type: "email" },
+            {
+              pattern:
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              message: "Invalid email",
+            },
           ]}
         >
           <Input
             placeholder="Email Address"
             value={userLogin.email}
             onChange={(e) => {
-              setUserLogin({ ...userLogin, email: e.target.value });
+              setUserLogin({ ...userLogin, email: e.target.value.trim() });
             }}
           />
         </Form.Item>

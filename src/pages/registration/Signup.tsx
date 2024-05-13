@@ -13,13 +13,21 @@ export interface Props {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+interface UserSignUp {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
 const Login = () => {
   const context = useContext(myContext) as Props;
   const { loading, setLoading } = context;
   const navigate = useNavigate();
 
   // user signup state
-  const [userSignup, setUserSignup] = useState({
+  const [userSignup, setUserSignup] = useState<UserSignUp>({
     name: "",
     email: "",
     password: "",
@@ -91,7 +99,7 @@ const Login = () => {
             placeholder="Username"
             value={userSignup.name}
             onChange={(e) => {
-              setUserSignup({ ...userSignup, name: e.target.value });
+              setUserSignup({ ...userSignup, name: e.target.value.trim() });
             }}
           />
         </Form.Item>
@@ -100,14 +108,18 @@ const Login = () => {
           label="Email"
           rules={[
             { required: true, message: "Please input your email!" },
-            { type: "email" },
+            {
+              pattern:
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              message: "Invalid email",
+            },
           ]}
         >
           <Input
             placeholder="Email address"
             value={userSignup.email}
             onChange={(e) => {
-              setUserSignup({ ...userSignup, email: e.target.value });
+              setUserSignup({ ...userSignup, email: e.target.value.trim() });
             }}
           />
         </Form.Item>
@@ -123,7 +135,10 @@ const Login = () => {
             placeholder="Password"
             value={userSignup.password}
             onChange={(e) => {
-              setUserSignup({ ...userSignup, password: e.target.value });
+              setUserSignup({
+                ...userSignup,
+                password: e.target.value.trim(),
+              });
             }}
           />
         </Form.Item>

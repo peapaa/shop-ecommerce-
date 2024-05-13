@@ -1,4 +1,5 @@
 import Layout from "../../components/layout/Layout";
+import { User } from "../registration/Login";
 import styles from "./UserDashboard.module.scss";
 
 const products = [
@@ -16,6 +17,9 @@ const products = [
 ];
 
 const UserDashboard = () => {
+  const userString = localStorage.getItem("user");
+  const user: User | null = userString ? JSON.parse(userString) : null;
+
   return (
     <Layout>
       <div className={styles.userContainer}>
@@ -27,12 +31,18 @@ const UserDashboard = () => {
             />
           </div>
 
-          <p>
-            <b>Name :</b> Kamal Nayan Upadhyay
-          </p>
-          <p>
-            <b>Email :</b> test@gmail.com
-          </p>
+          <div>
+            <b>Name :</b> {user?.name}
+          </div>
+          <div>
+            <b>Email :</b> {user?.email}
+          </div>
+          <div>
+            <b>Date :</b> {user?.date}
+          </div>
+          <div>
+            <b>Role :</b> {user?.role}
+          </div>
         </div>
 
         <div className={styles.userContainerBottom}>

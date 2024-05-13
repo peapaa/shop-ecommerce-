@@ -5,11 +5,14 @@ import {
 } from "@ant-design/icons";
 import styles from "./AdminDashboard.module.scss";
 
-import { Tab, Tabs, TabPanel } from "react-tabs";
+import { Tab, Tabs, TabPanel, TabList } from "react-tabs";
 import ProductDetail from "../../components/admin/ProductDetail";
 import OrderDetail from "../../components/admin/OrderDetail";
 import UserDetail from "../../components/admin/UserDetail";
+import { User } from "../registration/Login";
 const AdminDashboard = () => {
+  const userString = localStorage.getItem("user");
+  const user: User | null = userString ? JSON.parse(userString) : null;
   return (
     <div className={styles.adminContainer}>
       <div className={styles.adminHeader}>
@@ -21,45 +24,53 @@ const AdminDashboard = () => {
           alt=""
         />
         <div>
-          <b>Name :</b> Kamal Nayan Upadhyay
+          <b>Name :</b> {user?.name}
         </div>
         <div>
-          <b>Email :</b> test@gmail.com
+          <b>Email :</b> {user?.email}
+        </div>
+        <div>
+          <b>Date :</b> {user?.date}
+        </div>
+        <div>
+          <b>Role :</b> {user?.role}
         </div>
       </div>
       {/* Bottom */}
       <Tabs>
-        <div className={styles.adminContent}>
-          <Tab>
-            <div className={styles.adminContentDetail}>
-              <ShoppingCartOutlined className={styles.icon} />
-              <h2 style={{ margin: 8 }}>10</h2>
-              <span>
-                <b>Total Products </b>
-              </span>
-            </div>
-          </Tab>
+        <TabList>
+          <div className={styles.adminContent}>
+            <Tab>
+              <div className={styles.adminContentDetail}>
+                <ShoppingCartOutlined className={styles.icon} />
+                <h2 style={{ margin: 8 }}>10</h2>
+                <span>
+                  <b>Total Products </b>
+                </span>
+              </div>
+            </Tab>
 
-          <Tab>
-            <div className={styles.adminContentDetail}>
-              <OrderedListOutlined className={styles.icon} />
-              <h2 style={{ margin: 8 }}>10</h2>
-              <span>
-                <b>Total Order</b>
-              </span>
-            </div>
-          </Tab>
+            <Tab>
+              <div className={styles.adminContentDetail}>
+                <OrderedListOutlined className={styles.icon} />
+                <h2 style={{ margin: 8 }}>10</h2>
+                <span>
+                  <b>Total Order</b>
+                </span>
+              </div>
+            </Tab>
 
-          <Tab>
-            <div className={styles.adminContentDetail}>
-              <UserOutlined className={styles.icon} />
-              <h2 style={{ margin: 8 }}>10</h2>
-              <span>
-                <b>Total User</b>
-              </span>
-            </div>
-          </Tab>
-        </div>
+            <Tab>
+              <div className={styles.adminContentDetail}>
+                <UserOutlined className={styles.icon} />
+                <h2 style={{ margin: 8 }}>10</h2>
+                <span>
+                  <b>Total User</b>
+                </span>
+              </div>
+            </Tab>
+          </div>
+        </TabList>
         <TabPanel>
           <ProductDetail />
         </TabPanel>
