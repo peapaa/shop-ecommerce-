@@ -7,7 +7,7 @@ import Loader from "../loader/Loader";
 import { useNavigate } from "react-router-dom";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { fireDB } from "../../firebase/FirebaseConfig";
-interface Product {
+export interface Product {
   title: string;
   price: string;
   productImageUrl: string;
@@ -16,6 +16,7 @@ interface Product {
   quantity: number;
   time: any;
   date: string;
+  id?: string;
 }
 const AddProductPage = () => {
   // context
@@ -58,8 +59,8 @@ const AddProductPage = () => {
       const productRef = collection(fireDB, "products");
       await addDoc(productRef, product);
       message.success("added product successfully");
-      navigate("/admin-dashboard");
       setLoading(false);
+      navigate("/admin-dashboard");
     } catch (err) {
       console.log(err);
       setLoading(false);

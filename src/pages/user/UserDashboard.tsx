@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import { User } from "../registration/Login";
 import styles from "./UserDashboard.module.scss";
@@ -42,6 +43,11 @@ const UserDashboard = () => {
           </div>
           <div>
             <b>Role :</b> {user?.role}
+          </div>
+          <div>
+            <button className={styles.changePassword}>
+              <Link to={"/change-password"}>Change Password</Link>
+            </button>
           </div>
         </div>
 

@@ -110,6 +110,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .category__itemImage {
@@ -268,6 +269,9 @@
 .footer__link {
   display: flex;
 }
+.footer__link a {
+  color: #fff;
+}
 .footer__linkLogo {
   width: 22px;
   object-fit: cover;
@@ -278,6 +282,7 @@
 .table {
   margin: 20px 40px;
 }
+
 /* media queries css responsive with mobile */
 @media only screen and (max-width: 767px) {
   .navbar {

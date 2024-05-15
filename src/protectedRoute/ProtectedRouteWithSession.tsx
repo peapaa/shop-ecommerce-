@@ -1,14 +1,16 @@
 import { Navigate } from "react-router-dom";
 import { User } from "../pages/registration/Login";
 
-function ProtectedRouteForAdmin({ children }: { children: any }) {
+function ProtectedRouteWithSession({ children }: { children: any }) {
   const userString = sessionStorage.getItem("userSession");
   const user: User | null = userString ? JSON.parse(userString) : null;
-  if (user?.role === "admin") {
+  console.log(user);
+  if (user && new Date().getTime() < user.expiration) {
     return children;
   } else {
+    sessionStorage.removeItem("userSession");
     return <Navigate to={"/login"} />;
   }
 }
 
-export default ProtectedRouteForAdmin;
+export default ProtectedRouteWithSession;

@@ -4,12 +4,12 @@ import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../pages/registration/Login";
 const Navbar = () => {
-  const userString = localStorage.getItem("user");
+  const userString = sessionStorage.getItem("userSession");
   const user: User | null = userString ? JSON.parse(userString) : null;
 
   const navigate = useNavigate();
   const logout = () => {
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("userSession");
     navigate("/login");
   };
 
@@ -59,7 +59,7 @@ const Navbar = () => {
 
         {user && (
           <li>
-            <a href="#" onClick={logout}>
+            <a href="/login" onClick={logout}>
               Logout
             </a>
           </li>

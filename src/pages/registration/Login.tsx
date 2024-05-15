@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, fireDB } from "../../firebase/FirebaseConfig";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { Props } from "./Signup";
+// import { useCookies } from "react-cookie";
 
 export interface User {
   name: string;
@@ -16,6 +17,7 @@ export interface User {
   role: string;
   time: Date;
   date: string;
+  expiration: number;
 }
 
 interface UserLogin {
@@ -31,7 +33,9 @@ const Login = () => {
     email: "",
     password: "",
   });
-  console.log("userLogin", userLogin);
+  // console.log("userLogin", userLogin);
+  // create cookies
+  // const [cookies, setCookie] = useCookies(["userCookie"]);
   const userLoginFunction = async () => {
     setLoading(true);
     try {
@@ -46,13 +50,28 @@ const Login = () => {
           collection(fireDB, "user"),
           where("uid", "==", users.user.uid)
         );
-        console.log("q", q);
+
+        // console.log("q", q);
 
         const data = onSnapshot(q, (QuerySnapshot) => {
           let user: User | null = null;
-          QuerySnapshot.forEach((doc) => (user = doc.data() as User));
+          QuerySnapshot.forEach((doc) => {
+            user = doc.data() as User;
+            return (user = {
+              ...user,
+              expiration: new Date().getTime() + 24 * 60 * 60 * 1000, // expiration 24 hours 24 * 60 * 60 * 1000
+            });
+          });
           if (user !== null) {
-            localStorage.setItem("user", JSON.stringify(user));
+            // save user on session storage
+            sessionStorage.setItem("userSession", JSON.stringify(user));
+
+            // save user on cookies
+            // setCookie("userCookie", JSON.stringify(user), { path: "/" });
+            // console.log("cookies", cookies);
+
+            // save user on local storage
+            // localStorage.setItem("user", JSON.stringify(user));
           }
           setUserLogin({
             email: "",
@@ -60,11 +79,7 @@ const Login = () => {
           });
           message.success("Login successful");
           setLoading(false);
-          // if (user && user?.role === "user") {
-          //   navigate("/user-dashboard");
-          // } else {
-          //   navigate("/admin-dashboard");
-          // }
+
           navigate("/");
           console.log("QuerySnapshot", QuerySnapshot);
         });
@@ -73,10 +88,12 @@ const Login = () => {
       } catch (err) {
         console.log(err);
         setLoading(false);
+        message.error("Login failed, please try again");
       }
     } catch (err) {
       console.log(err);
       setLoading(false);
+      message.error("Wrong email or password, please try again.");
     }
   };
   return (
@@ -86,11 +103,8 @@ const Login = () => {
       <Form
         name="basic"
         labelCol={{ span: 5 }}
-        // wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
         onFinish={userLoginFunction}
-        //   initialValues={initialValues}
-        // onFinishFailed={onFinishFailed}
         autoComplete="off"
         className={styles.regiterForm}
       >
@@ -136,9 +150,14 @@ const Login = () => {
             Submit
           </Button>
         </div>
-        <p className={styles.regiterText}>
-          Don't have an account <Link to={"/signup"}>SignUp</Link>
-        </p>
+        <div className={styles.regiterText}>
+          <div style={{ margin: "12px 0px  12px 0px" }}>
+            <Link to={"/reset-password"}>Forgot password</Link>
+          </div>
+          <div style={{ margin: "0px 0px  12px 0px" }}>
+            Don't have an account <Link to={"/signup"}>SignUp</Link>
+          </div>
+        </div>
       </Form>
     </div>
   );

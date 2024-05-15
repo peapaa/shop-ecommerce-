@@ -8,6 +8,7 @@ const Loader = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        paddingTop: 12,
       }}
     >
       <Spin spinning={true} />

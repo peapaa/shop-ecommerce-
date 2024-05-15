@@ -7,11 +7,14 @@ import myContext from "../../context/myContext";
 import Loader from "../../components/loader/Loader";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, fireDB } from "../../firebase/FirebaseConfig";
-import { Timestamp, addDoc, collection } from "firebase/firestore";
+import { Timestamp, Unsubscribe, addDoc, collection } from "firebase/firestore";
+import { Product } from "../../components/admin/AddProductPage";
 
 export interface Props {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  getAllProduct: Product[];
+  getAllProductFunction: () => Promise<(() => Unsubscribe) | undefined>;
 }
 
 interface UserSignUp {
@@ -33,7 +36,7 @@ const Login = () => {
     password: "",
     role: "user",
   });
-  console.log(userSignup);
+  // console.log(userSignup);
 
   // user sign up function
   const userSignupFunction = async () => {
@@ -72,9 +75,10 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       setLoading(false);
+      message.error("email already in used");
     }
   };
-  // userSignupFunction();
+
   return (
     <div className={styles.regiterContainer}>
       <h2 className={styles.regiterTitle}>Sign Up</h2>
@@ -82,11 +86,8 @@ const Login = () => {
       <Form
         name="basic"
         labelCol={{ span: 5 }}
-        // wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
         onFinish={userSignupFunction}
-        //   initialValues={initialValues}
-        // onFinishFailed={onFinishFailed}
         autoComplete="off"
         className={styles.regiterForm}
       >

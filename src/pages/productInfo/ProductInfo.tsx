@@ -1,38 +1,98 @@
 import { Rate } from "antd";
 import Layout from "../../components/layout/Layout";
 import styles from "./ProductInfo.module.scss";
+import { useCallback, useContext, useEffect, useState } from "react";
+import myContext from "../../context/myContext";
+import { Props } from "../registration/Signup";
+import Loader from "../../components/loader/Loader";
+import { useNavigate, useParams } from "react-router-dom";
+import { Timestamp, doc, getDoc } from "firebase/firestore";
+import { fireDB } from "../../firebase/FirebaseConfig";
+import { Product } from "../../components/admin/UpdateProductPage";
 
 const ProductInfo = () => {
+  // context
+  const context = useContext(myContext) as Props;
+  const { loading, setLoading } = context;
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  // product state
+  const [product, setProduct] = useState<Product>({
+    title: "",
+    price: "",
+    productImageUrl: "",
+    category: "",
+    description: "",
+    quantity: 1,
+    time: Timestamp.now(),
+    date: new Date().toLocaleString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    }),
+  });
+  // get product info
+  const getProductInfo = useCallback(async () => {
+    if (!id) {
+      console.error("ID is not defined");
+      return;
+    }
+    setLoading(true);
+    try {
+      const productTemp = await getDoc(doc(fireDB, "products", id));
+      const product = productTemp.data();
+      console.log(product);
+      if (!product) {
+        return navigate("/nopage");
+      }
+      setProduct({
+        title: product?.title,
+        price: product?.price,
+        productImageUrl: product?.productImageUrl,
+        category: product?.category,
+        description: product?.description,
+        quantity: product?.quantity,
+        time: product?.time,
+        date: product?.date,
+      });
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  }, [id, setLoading, navigate]);
+  useEffect(() => {
+    if (id) {
+      getProductInfo();
+    }
+  }, [id, getProductInfo]);
   return (
     <Layout>
       <div className={styles.productContainer}>
-        <img
-          src="https://i.pinimg.com/736x/e4/61/f2/e461f2246b6ad93e2099d98780626396.jpg"
-          className={styles.productImg}
-        />
-        <div className={styles.productInfo}>
-          <h2 className={styles.productTitle}>
-            Intel® Core™ i5-12600HX Processor (18M Cache, up to 4.60 GHz)
-          </h2>
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            <img
+              src={product.productImageUrl}
+              className={styles.productImg}
+              alt="productImg"
+            />
+            <div className={styles.productInfo}>
+              <h2 className={styles.productTitle}>{product.title}</h2>
 
-          <Rate allowClear />
+              <Rate allowClear />
+              <h2 className={styles.productTitle}>{product.price}$</h2>
 
-          <div>
-            <h2 className="">Description:</h2>
-            <p className={styles.productDesc}>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa,
-              explicabo enim ratione voluptatum at cupiditate delectus nemo
-              dolorum officia esse beatae optio ut mollitia sit omnis, possimus
-              nesciunt voluptas natus! Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Provident rerum ad rem reprehenderit qui, omnis
-              nam distinctio, dignissimos nisi quidem aliquam, sapiente delectus
-              commodi! Perspiciatis provident illo autem quidem ad! Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Beatae reiciendis eum
-              dolorum cupiditate
-            </p>
-          </div>
-          <button className={styles.productAddCartBtn}>Add to cart</button>
-        </div>
+              <div>
+                <h2 className="">Description:</h2>
+                <p className={styles.productDesc}>{product.description}</p>
+              </div>
+              <button className={styles.productAddCartBtn}>Add to cart</button>
+            </div>
+          </>
+        )}
       </div>
     </Layout>
   );

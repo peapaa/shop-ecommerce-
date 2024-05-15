@@ -10,9 +10,18 @@ import ProductDetail from "../../components/admin/ProductDetail";
 import OrderDetail from "../../components/admin/OrderDetail";
 import UserDetail from "../../components/admin/UserDetail";
 import { User } from "../registration/Login";
+import { useContext } from "react";
+import myContext from "../../context/myContext";
+import { Props } from "../registration/Signup";
+import { Link } from "react-router-dom";
 const AdminDashboard = () => {
-  const userString = localStorage.getItem("user");
+  // take info user  in sessionStorage
+  const userString = sessionStorage.getItem("userSession");
   const user: User | null = userString ? JSON.parse(userString) : null;
+
+  // context
+  const context = useContext(myContext) as Props;
+  const { getAllProduct } = context;
   return (
     <div className={styles.adminContainer}>
       <div className={styles.adminHeader}>
@@ -35,6 +44,11 @@ const AdminDashboard = () => {
         <div>
           <b>Role :</b> {user?.role}
         </div>
+        <div>
+          <button className={styles.changePassword}>
+            <Link to={"/change-password"}>Change Password</Link>
+          </button>
+        </div>
       </div>
       {/* Bottom */}
       <Tabs>
@@ -43,7 +57,7 @@ const AdminDashboard = () => {
             <Tab>
               <div className={styles.adminContentDetail}>
                 <ShoppingCartOutlined className={styles.icon} />
-                <h2 style={{ margin: 8 }}>10</h2>
+                <h2 style={{ margin: 8 }}>{getAllProduct.length}</h2>
                 <span>
                   <b>Total Products </b>
                 </span>

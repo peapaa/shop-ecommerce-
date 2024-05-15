@@ -1,4 +1,5 @@
 // category
+import { useNavigate } from "react-router-dom";
 import styles from "../../App.module.scss";
 const category = [
   {
@@ -36,12 +37,17 @@ const category = [
 ];
 
 const Category = () => {
+  const navigate = useNavigate();
   return (
     <div className={styles.category}>
       <div className={styles.category__list}>
         {category.map((item, index) => {
           return (
-            <div key={index} className={styles.category__item}>
+            <div
+              key={index}
+              className={styles.category__item}
+              onClick={() => navigate(`/category/${item.name}`)}
+            >
               <img
                 className={styles.category__itemImage}
                 src={item.image}
