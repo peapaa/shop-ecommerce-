@@ -174,9 +174,9 @@ import { cartItem } from "../../redux/selector";
 import {
   addDoc,
   collection,
-  doc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { fireDB } from "../../firebase/FirebaseConfig";
@@ -185,6 +185,9 @@ import { User } from "../../pages/registration/Login";
 const { Meta } = Card;
 
 const HomePageProductCard = () => {
+  // useEffect(() => {
+  //   getAllProductCarts();
+  // }, []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const context = useContext(myContext) as Props;
@@ -204,7 +207,6 @@ const HomePageProductCard = () => {
     dispatch(addToCart(item));
 
     setLoadingAddCart((prev: any) => ({ ...prev, [productId]: true }));
-
     try {
       if (user) {
         const q = query(
@@ -216,6 +218,14 @@ const HomePageProductCard = () => {
 
         if (productCarts.empty) {
           await addDoc(collection(fireDB, "carts"), { ...item, uid: user.uid });
+        } else {
+          productCarts.forEach((doc) => {
+            // Nếu cần, cập nhật tài liệu đã tồn tại
+            setDoc(doc.ref, {
+              ...doc.data(),
+              quantity: doc.data().quantity + 1,
+            });
+          });
         }
         setLoadingAddCart((prev: any) => ({ ...prev, [productId]: false }));
         message.success("Added to cart successfully");

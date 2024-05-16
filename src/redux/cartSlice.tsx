@@ -1,6 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { User } from "../pages/registration/Login";
 
-const initialState: any[] = [];
+// get user from sessionStorage
+const userString = sessionStorage.getItem("userSession");
+const user: User | null = userString ? JSON.parse(userString) : null;
+console.log("user from state", user);
+
+// get initialState from localStorage
+let initialState: any[] = [];
+const initialStateString = localStorage.getItem("initialState");
+initialState = initialStateString ? JSON.parse(initialStateString) : [];
+console.log("initialState from cartSlice", initialState);
+
+// cartSlice
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -26,8 +38,15 @@ const cartSlice = createSlice({
         return item;
       });
     },
+    updateInitialState: (state, action) => {
+      return action.payload;
+    },
   },
 });
-export const { addToCart, deleteFromCart, incrementQuantity } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  deleteFromCart,
+  incrementQuantity,
+  updateInitialState,
+} = cartSlice.actions;
 export default cartSlice.reducer;
