@@ -35,7 +35,9 @@ function App() {
             path="/cart"
             element={
               <ProtectedRouteWithSession>
-                <CartPage />
+                <ProtectedRouteForUser>
+                  <CartPage />
+                </ProtectedRouteForUser>
               </ProtectedRouteWithSession>
             }
           />

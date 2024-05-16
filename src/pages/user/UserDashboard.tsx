@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
-import { User } from "../registration/Login";
 import styles from "./UserDashboard.module.scss";
+import { User } from "../registration/Login";
 
 const products = [
   {
@@ -18,7 +18,7 @@ const products = [
 ];
 
 const UserDashboard = () => {
-  const userString = localStorage.getItem("user");
+  const userString = sessionStorage.getItem("userSession");
   const user: User | null = userString ? JSON.parse(userString) : null;
 
   return (

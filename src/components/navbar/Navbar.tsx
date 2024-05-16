@@ -65,7 +65,7 @@ const Navbar = () => {
           </li>
         )}
 
-        {user && (
+        {user && user?.role === "user" && (
           <li>
             <Link to={"/cart"}>Cart(0)</Link>
           </li>

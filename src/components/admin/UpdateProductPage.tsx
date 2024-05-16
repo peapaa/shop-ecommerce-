@@ -5,7 +5,7 @@ import myContext from "../../context/myContext";
 import { Props } from "../../pages/registration/Signup";
 import Loader from "../loader/Loader";
 import { useNavigate, useParams } from "react-router-dom";
-import { Timestamp, doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { fireDB } from "../../firebase/FirebaseConfig";
 
 export interface Product {
@@ -15,7 +15,6 @@ export interface Product {
   category: string;
   description: string;
   quantity: number;
-  time: any;
   date: string;
   id?: string;
 }
@@ -36,7 +35,6 @@ const UpdateProductPage = () => {
     category: "",
     description: "",
     quantity: 1,
-    time: Timestamp.now(),
     date: new Date().toLocaleString("en-US", {
       month: "short",
       day: "2-digit",
@@ -76,7 +74,6 @@ const UpdateProductPage = () => {
         category: product?.category,
         description: product?.description,
         quantity: product?.quantity,
-        time: product?.time,
         date: product?.date,
       });
 

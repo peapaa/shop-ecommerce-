@@ -9,12 +9,14 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, fireDB } from "../../firebase/FirebaseConfig";
 import { Timestamp, Unsubscribe, addDoc, collection } from "firebase/firestore";
 import { Product } from "../../components/admin/AddProductPage";
+import { User } from "./Login";
 
 export interface Props {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   getAllProduct: Product[];
   getAllProductFunction: () => Promise<(() => Unsubscribe) | undefined>;
+  user: User | null;
 }
 
 interface UserSignUp {

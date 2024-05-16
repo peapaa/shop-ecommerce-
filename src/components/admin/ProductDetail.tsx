@@ -19,7 +19,6 @@ interface DataType {
   price: number;
   productImageUrl: string;
   quantity: string | number;
-  time: any;
 }
 
 const onChange: TableProps<DataType>["onChange"] = (
@@ -62,7 +61,6 @@ const ProductDetail: React.FC = () => {
       price: parseInt(product.price),
       productImageUrl: product.productImageUrl,
       quantity: product.quantity,
-      time: product.time,
     };
   });
 

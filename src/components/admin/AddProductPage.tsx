@@ -5,7 +5,7 @@ import myContext from "../../context/myContext";
 import { Props } from "../../pages/registration/Signup";
 import Loader from "../loader/Loader";
 import { useNavigate } from "react-router-dom";
-import { Timestamp, addDoc, collection } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { fireDB } from "../../firebase/FirebaseConfig";
 export interface Product {
   title: string;
@@ -14,7 +14,6 @@ export interface Product {
   category: string;
   description: string;
   quantity: number;
-  time: any;
   date: string;
   id?: string;
 }
@@ -32,7 +31,6 @@ const AddProductPage = () => {
     category: "",
     description: "",
     quantity: 1,
-    time: Timestamp.now(),
     date: new Date().toLocaleString("en-US", {
       month: "short",
       day: "2-digit",

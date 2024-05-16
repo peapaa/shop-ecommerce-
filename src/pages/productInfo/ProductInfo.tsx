@@ -1,4 +1,4 @@
-import { Rate } from "antd";
+import { Button, Rate } from "antd";
 import Layout from "../../components/layout/Layout";
 import styles from "./ProductInfo.module.scss";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -6,9 +6,10 @@ import myContext from "../../context/myContext";
 import { Props } from "../registration/Signup";
 import Loader from "../../components/loader/Loader";
 import { useNavigate, useParams } from "react-router-dom";
-import { Timestamp, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { fireDB } from "../../firebase/FirebaseConfig";
 import { Product } from "../../components/admin/UpdateProductPage";
+import { User } from "../registration/Login";
 
 const ProductInfo = () => {
   // context
@@ -16,6 +17,14 @@ const ProductInfo = () => {
   const { loading, setLoading } = context;
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // get user from session storge
+  const userString = sessionStorage.getItem("userSession");
+  const user: User | null = userString ? JSON.parse(userString) : null;
+
+  // const [loadingAddCart, setLoadingAddCart] = useState<{
+  //   [key: string]: boolean;
+  // }>({});
 
   // product state
   const [product, setProduct] = useState<Product>({
@@ -25,7 +34,6 @@ const ProductInfo = () => {
     category: "",
     description: "",
     quantity: 1,
-    time: Timestamp.now(),
     date: new Date().toLocaleString("en-US", {
       month: "short",
       day: "2-digit",
@@ -53,7 +61,6 @@ const ProductInfo = () => {
         category: product?.category,
         description: product?.description,
         quantity: product?.quantity,
-        time: product?.time,
         date: product?.date,
       });
       setLoading(false);
@@ -89,7 +96,19 @@ const ProductInfo = () => {
                 <h2 className="">Description:</h2>
                 <p className={styles.productDesc}>{product.description}</p>
               </div>
-              <button className={styles.productAddCartBtn}>Add to cart</button>
+              {user && user?.role === "user" ? (
+                <Button
+                  className={styles.productAddCartBtn}
+                  // onClick={() => addCart(item)}
+                  // loading={loadingAddCart[id ?? ""]}
+                >
+                  Add To Cart
+                </Button>
+              ) : (
+                <Button className={styles.productAddCartBtn} disabled>
+                  Add To Cart
+                </Button>
+              )}
             </div>
           </>
         )}

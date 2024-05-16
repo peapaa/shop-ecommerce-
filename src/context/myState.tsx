@@ -11,7 +11,7 @@ function MyState({ children }: { children: any }) {
   const getAllProductFunction = async () => {
     setLoading(true);
     try {
-      const q = query(collection(fireDB, "products"), orderBy("time"));
+      const q = query(collection(fireDB, "products"), orderBy("date", "desc"));
       const data = onSnapshot(q, (QuerySnapshot) => {
         let productsArray: Product[] = [];
         QuerySnapshot.forEach((doc) => {
@@ -31,7 +31,12 @@ function MyState({ children }: { children: any }) {
   }, []);
   return (
     <MyContext.Provider
-      value={{ loading, setLoading, getAllProduct, getAllProductFunction }}
+      value={{
+        loading,
+        setLoading,
+        getAllProduct,
+        getAllProductFunction,
+      }}
     >
       {children}
     </MyContext.Provider>
