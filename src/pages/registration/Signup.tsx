@@ -17,7 +17,6 @@ export interface Props {
   getAllProduct: Product[];
   getAllProductFunction: () => Promise<(() => Unsubscribe) | undefined>;
   user: User | null;
-  getAllProductCarts: () => Promise<void>;
 }
 
 interface UserSignUp {
@@ -39,7 +38,6 @@ const Login = () => {
     password: "",
     role: "user",
   });
-  // console.log(userSignup);
 
   // user sign up function
   const userSignupFunction = async () => {

@@ -1,16 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { User } from "../pages/registration/Login";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { fireDB } from "../firebase/FirebaseConfig";
+import { AppDispatch } from "./store";
+import { useDispatch } from "react-redux";
 
-// get user from sessionStorage
-const userString = sessionStorage.getItem("userSession");
-const user: User | null = userString ? JSON.parse(userString) : null;
-console.log("user from state", user);
-
-// get initialState from localStorage
-let initialState: any[] = [];
-// const initialStateString = localStorage.getItem("initialState");
-// initialState = initialStateString ? JSON.parse(initialStateString) : [];
-console.log("initialState from cartSlice", initialState);
+const initialState: any[] = [];
 
 // cartSlice
 const cartSlice = createSlice({
@@ -42,7 +37,47 @@ const cartSlice = createSlice({
       return (state = action.payload);
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getProductCarts.pending, (state, action) => {
+        console.log("getProductCarts.pendiing", action);
+      })
+      .addCase(getProductCarts.fulfilled, (state, action) => {
+        console.log("getProductCarts.fulfilled", action);
+        state.push(...action.payload);
+      })
+      .addCase(getProductCarts.rejected, (state, action) => {
+        console.error("Error fetching product carts:", action.payload);
+      });
+  },
 });
+
+export const getProductCarts = createAsyncThunk(
+  "cart/getCartFromFirebase",
+  async () => {
+    try {
+      const userString = sessionStorage.getItem("userSession");
+      const user: User | null = userString ? JSON.parse(userString) : null;
+
+      if (user?.uid) {
+        const q1 = query(
+          collection(fireDB, "carts"),
+          where("uid", "==", user.uid)
+        );
+        const allProductCarts = await getDocs(q1);
+        const data = allProductCarts.docs.map((doc) => doc.data());
+        console.log("data from context", data);
+        return data;
+      } else {
+        console.error("User UID is undefined");
+        return [];
+      }
+    } catch (err) {
+      console.error("Error fetching product carts:", err);
+      return [];
+    }
+  }
+);
 export const {
   addToCart,
   deleteFromCart,
@@ -50,3 +85,5 @@ export const {
   updateInitialState,
 } = cartSlice.actions;
 export default cartSlice.reducer;
+
+export const useAppDispatch: () => AppDispatch = useDispatch;

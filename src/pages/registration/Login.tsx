@@ -8,8 +8,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, fireDB } from "../../firebase/FirebaseConfig";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { Props } from "./Signup";
-
-// import { useCookies } from "react-cookie";
+import { getProductCarts, useAppDispatch } from "../../redux/cartSlice";
 
 export interface User {
   name: string;
@@ -28,16 +27,14 @@ interface UserLogin {
 
 const Login = () => {
   const context = useContext(myContext) as Props;
-  const { loading, setLoading, getAllProductCarts } = context;
+  const { loading, setLoading } = context;
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [userLogin, setUserLogin] = useState<UserLogin>({
     email: "",
     password: "",
   });
 
-  // console.log("userLogin", userLogin);
-  // create cookies
-  // const [cookies, setCookie] = useCookies(["userCookie"]);
   const userLoginFunction = async () => {
     setLoading(true);
     try {
@@ -52,8 +49,6 @@ const Login = () => {
           collection(fireDB, "user"),
           where("uid", "==", users.user.uid)
         );
-
-        // console.log("q", q);
 
         const data = onSnapshot(q, (QuerySnapshot) => {
           let user: User | null = null;
@@ -73,12 +68,13 @@ const Login = () => {
             password: "",
           });
           message.success("Login successful");
-          // get cart
-          getAllProductCarts();
+
+          // dispatch function get data from firebase
+          dispatch(getProductCarts());
           setLoading(false);
 
           navigate("/");
-          window.location.reload();
+          // window.location.reload();
           console.log("QuerySnapshot", QuerySnapshot);
         });
 
