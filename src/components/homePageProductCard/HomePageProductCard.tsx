@@ -166,7 +166,7 @@ import { Button, Card, Skeleton, message } from "antd";
 import styles from "../../App.module.scss";
 import { useNavigate } from "react-router";
 import myContext from "../../context/myContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Props } from "../../pages/registration/Signup";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
@@ -191,8 +191,16 @@ const HomePageProductCard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const context = useContext(myContext) as Props;
-  const { getAllProduct, loading } = context;
+  const { getAllProduct, loading, getAllProductCarts } = context;
 
+  const products = useSelector((state: any) => state.cart);
+  useEffect(() => {
+    // Kiểm tra xem dữ liệu đã được tải xuống từ Firestore hay chưa
+    if (products.length === 0) {
+      // Nếu chưa, dispatch hành động fetchProducts
+      getAllProductCarts();
+    }
+  }, [products]);
   // get user from session storage
   const userString = sessionStorage.getItem("userSession");
   const user: User | null = userString ? JSON.parse(userString) : null;

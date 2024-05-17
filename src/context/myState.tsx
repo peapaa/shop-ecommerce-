@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 import { fireDB } from "../firebase/FirebaseConfig";
 import { User } from "../pages/registration/Login";
+import { useDispatch, useSelector } from "react-redux";
+import { updateInitialState } from "../redux/cartSlice";
 
 // get users information
 const userString = sessionStorage.getItem("userSession");
@@ -19,8 +21,9 @@ const user: User | null = userString ? JSON.parse(userString) : null;
 function MyState({ children }: { children: any }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [getAllProduct, setGetAllProduct] = useState<Product[]>([]);
-  const [initialState, setInitialState] = useState<any[]>([]);
 
+  const initialState = useSelector((state: any) => state.cart);
+  const dispatch = useDispatch();
   // all products
   const getAllProductFunction = async () => {
     setLoading(true);
@@ -54,9 +57,9 @@ function MyState({ children }: { children: any }) {
       const data = allProductCarts.docs.map((doc) => doc.data());
       console.log("data from context", data);
       if (data.length > 0) {
-        setInitialState(data);
+        await dispatch(updateInitialState(data));
       } else {
-        setInitialState([]);
+        await dispatch(updateInitialState([]));
       }
       setLoading(false);
     } catch (err) {
@@ -66,14 +69,20 @@ function MyState({ children }: { children: any }) {
   };
   console.log("initialState from myState", initialState);
   // save all product to localStorage
-  if (initialState) {
-    localStorage.setItem("initialState", JSON.stringify(initialState));
-  }
+  // if (initialState) {
+  //   localStorage.setItem("initialState", JSON.stringify(initialState));
+  // }
 
   // run function
   useEffect(() => {
-    getAllProductFunction();
-    getAllProductCarts();
+    const fetchData = async () => {
+      setLoading(true);
+      await getAllProductFunction();
+      await getAllProductCarts();
+      setLoading(false);
+    };
+
+    fetchData();
   }, []);
   // console.log("initialState context", initialState);
   return (
@@ -83,6 +92,7 @@ function MyState({ children }: { children: any }) {
         setLoading,
         getAllProduct,
         getAllProductFunction,
+        getAllProductCarts,
       }}
     >
       {children}

@@ -8,8 +8,8 @@ console.log("user from state", user);
 
 // get initialState from localStorage
 let initialState: any[] = [];
-const initialStateString = localStorage.getItem("initialState");
-initialState = initialStateString ? JSON.parse(initialStateString) : [];
+// const initialStateString = localStorage.getItem("initialState");
+// initialState = initialStateString ? JSON.parse(initialStateString) : [];
 console.log("initialState from cartSlice", initialState);
 
 // cartSlice
@@ -39,7 +39,7 @@ const cartSlice = createSlice({
       });
     },
     updateInitialState: (state, action) => {
-      return action.payload;
+      return (state = action.payload);
     },
   },
 });

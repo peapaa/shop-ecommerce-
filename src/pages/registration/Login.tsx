@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, fireDB } from "../../firebase/FirebaseConfig";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { Props } from "./Signup";
+
 // import { useCookies } from "react-cookie";
 
 export interface User {
@@ -27,12 +28,13 @@ interface UserLogin {
 
 const Login = () => {
   const context = useContext(myContext) as Props;
-  const { loading, setLoading } = context;
+  const { loading, setLoading, getAllProductCarts } = context;
   const navigate = useNavigate();
   const [userLogin, setUserLogin] = useState<UserLogin>({
     email: "",
     password: "",
   });
+
   // console.log("userLogin", userLogin);
   // create cookies
   // const [cookies, setCookie] = useCookies(["userCookie"]);
@@ -65,13 +67,6 @@ const Login = () => {
           if (user !== null) {
             // save user on session storage
             sessionStorage.setItem("userSession", JSON.stringify(user));
-
-            // save user on cookies
-            // setCookie("userCookie", JSON.stringify(user), { path: "/" });
-            // console.log("cookies", cookies);
-
-            // save user on local storage
-            // localStorage.setItem("user", JSON.stringify(user));
           }
           setUserLogin({
             email: "",
@@ -79,8 +74,11 @@ const Login = () => {
           });
           message.success("Login successful");
           setLoading(false);
+          // get cart
+          getAllProductCarts();
 
           navigate("/");
+          window.location.reload();
           console.log("QuerySnapshot", QuerySnapshot);
         });
 
