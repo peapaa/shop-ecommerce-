@@ -73,9 +73,9 @@ const Login = () => {
             password: "",
           });
           message.success("Login successful");
-          setLoading(false);
           // get cart
           getAllProductCarts();
+          setLoading(false);
 
           navigate("/");
           window.location.reload();
