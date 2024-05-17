@@ -9,7 +9,6 @@ function ProtectedRouteWithSession({ children }: { children: any }) {
     return children;
   } else {
     sessionStorage.removeItem("userSession");
-    localStorage.removeItem("initialState");
 
     return <Navigate to={"/login"} />;
   }

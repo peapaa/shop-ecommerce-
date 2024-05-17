@@ -1,33 +1,28 @@
-import { Button, Card, Skeleton, message } from "antd";
+import { Button, Card, Skeleton } from "antd";
 import styles from "../../App.module.scss";
 import { useNavigate } from "react-router";
 import myContext from "../../context/myContext";
 import { useContext, useState } from "react";
 import { Props } from "../../pages/registration/Signup";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../redux/cartSlice";
-import { cartItem } from "../../redux/selector";
+import { useSelector } from "react-redux";
 import {
-  addDoc,
-  collection,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
-import { fireDB } from "../../firebase/FirebaseConfig";
+  ProductCart,
+  addProductToCarts,
+  useAppDispatch,
+} from "../../redux/cartSlice";
+
 import { User } from "../../pages/registration/Login";
 
 const { Meta } = Card;
 
 const HomePageProductCard = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const context = useContext(myContext) as Props;
   const { getAllProduct, loading } = context;
 
-  const products = useSelector((state: any) => state.cart);
-  console.log("products", products);
+  const productCarts = useSelector((state: any) => state.cart);
+  console.log("products", productCarts);
 
   // get user from session storage
   const userString = sessionStorage.getItem("userSession");
@@ -38,45 +33,17 @@ const HomePageProductCard = () => {
     [key: string]: boolean;
   }>({});
 
-  const addCart = async (item: any) => {
-    const productId = item.id;
-    dispatch(addToCart(item));
-
-    setLoadingAddCart((prev: any) => ({ ...prev, [productId]: true }));
+  const addCart = async (item: ProductCart) => {
+    setLoadingAddCart((prev) => ({ ...prev, [item.id ?? ""]: true }));
     try {
-      if (user) {
-        const q = query(
-          collection(fireDB, "carts"),
-          where("id", "==", item.id),
-          where("uid", "==", user.uid)
-        );
-        const productCarts = await getDocs(q);
-
-        if (productCarts.empty) {
-          await addDoc(collection(fireDB, "carts"), { ...item, uid: user.uid });
-        } else {
-          productCarts.forEach((doc) => {
-            setDoc(doc.ref, {
-              ...doc.data(),
-              quantity: doc.data().quantity + 1,
-            });
-          });
-        }
-        setLoadingAddCart((prev: any) => ({ ...prev, [productId]: false }));
-        message.success("Added to cart successfully");
-      }
+      await dispatch(addProductToCarts(item));
+      setLoadingAddCart((prev) => ({ ...prev, [item.id ?? ""]: false }));
     } catch (err) {
-      console.error("Error adding to cart:", err);
-      setLoadingAddCart((prev: any) => ({ ...prev, [productId]: false }));
-      message.error("add cart failed");
+      console.log(err);
+      setLoadingAddCart((prev) => ({ ...prev, [item.id ?? ""]: false }));
     }
-
-    setLoadingAddCart((prev: any) => ({ ...prev, [productId]: false }));
   };
 
-  // Context
-  const cartItems = useSelector(cartItem);
-  console.log("cartItems", cartItems);
   return (
     <div className={styles.product__card}>
       {/* Heading */}

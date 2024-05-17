@@ -3,6 +3,7 @@ import styles from "../../App.module.scss";
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../pages/registration/Login";
+import { useSelector } from "react-redux";
 const Navbar = () => {
   const userString = sessionStorage.getItem("userSession");
   const user: User | null = userString ? JSON.parse(userString) : null;
@@ -10,9 +11,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const logout = () => {
     sessionStorage.removeItem("userSession");
-    localStorage.removeItem("initialState");
     navigate("/login");
   };
+  const productCarts = useSelector((state: any) => state.cart);
 
   return (
     <div className={styles.navbar}>
@@ -68,7 +69,7 @@ const Navbar = () => {
 
         {user && user?.role === "user" && (
           <li>
-            <Link to={"/cart"}>Cart(0)</Link>
+            <Link to={"/cart"}>Cart({productCarts.length})</Link>
           </li>
         )}
       </ul>

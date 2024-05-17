@@ -10,6 +10,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { fireDB } from "../../firebase/FirebaseConfig";
 import { Product } from "../../components/admin/UpdateProductPage";
 import { User } from "../registration/Login";
+import { addProductToCarts, useAppDispatch } from "../../redux/cartSlice";
 
 const ProductInfo = () => {
   // context
@@ -17,14 +18,14 @@ const ProductInfo = () => {
   const { loading, setLoading } = context;
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
   // get user from session storge
   const userString = sessionStorage.getItem("userSession");
   const user: User | null = userString ? JSON.parse(userString) : null;
 
-  // const [loadingAddCart, setLoadingAddCart] = useState<{
-  //   [key: string]: boolean;
-  // }>({});
+  const [loadingAddCart, setLoadingAddCart] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   // product state
   const [product, setProduct] = useState<Product>({
@@ -39,6 +40,7 @@ const ProductInfo = () => {
       day: "2-digit",
       year: "numeric",
     }),
+    id: "",
   });
   // get product info
   const getProductInfo = useCallback(async () => {
@@ -62,6 +64,7 @@ const ProductInfo = () => {
         description: product?.description,
         quantity: product?.quantity,
         date: product?.date,
+        id: productTemp?.id, // id of the product from firebase
       });
       setLoading(false);
     } catch (err) {
@@ -69,11 +72,24 @@ const ProductInfo = () => {
       setLoading(false);
     }
   }, [id, setLoading, navigate]);
+
   useEffect(() => {
     if (id) {
       getProductInfo();
     }
   }, [id, getProductInfo]);
+  console.log("product", product);
+  // dispatch actions add to cart
+  const addCart = async (item: Product) => {
+    setLoadingAddCart((prev) => ({ ...prev, [item.id ?? ""]: true }));
+    try {
+      await dispatch(addProductToCarts(item));
+      setLoadingAddCart((prev) => ({ ...prev, [item.id ?? ""]: false }));
+    } catch (err) {
+      console.log(err);
+      setLoadingAddCart((prev) => ({ ...prev, [item.id ?? ""]: false }));
+    }
+  };
   return (
     <Layout>
       <div className={styles.productContainer}>
@@ -99,8 +115,8 @@ const ProductInfo = () => {
               {user && user?.role === "user" ? (
                 <Button
                   className={styles.productAddCartBtn}
-                  // onClick={() => addCart(item)}
-                  // loading={loadingAddCart[id ?? ""]}
+                  onClick={() => addCart(product)}
+                  loading={loadingAddCart[id ?? ""]}
                 >
                   Add To Cart
                 </Button>

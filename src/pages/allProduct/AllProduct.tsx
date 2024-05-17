@@ -1,20 +1,21 @@
 import { useNavigate } from "react-router";
 import Layout from "../../components/layout/Layout";
-import { Button, Card, Skeleton, message } from "antd";
+import { Button, Card, Skeleton } from "antd";
 import Meta from "antd/es/card/Meta";
 import styles from "../../App.module.scss";
 import { useContext, useState } from "react";
 import myContext from "../../context/myContext";
 import { Props } from "../registration/Signup";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/cartSlice";
-import { addDoc, collection } from "firebase/firestore";
-import { fireDB } from "../../firebase/FirebaseConfig";
+import {
+  ProductCart,
+  addProductToCarts,
+  useAppDispatch,
+} from "../../redux/cartSlice";
 import { User } from "../registration/Login";
 
 const AllProduct = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // get user from session storge
   const userString = sessionStorage.getItem("userSession");
@@ -25,27 +26,16 @@ const AllProduct = () => {
     [key: string]: boolean;
   }>({});
 
-  const addCart = async (item: any) => {
-    const productId = item.id;
-    console.log(productId);
-    dispatch(addToCart(item));
-    // check loading theo id product
-    setLoadingAddCart((prev: any) => ({ ...prev, [productId]: true }));
+  // dispatch function add cart
+  const addCart = async (item: ProductCart) => {
+    setLoadingAddCart((prev) => ({ ...prev, [item.id ?? ""]: true }));
     try {
-      await addDoc(collection(fireDB, "carts"), { ...item, uid: user?.uid });
-      message.success("added to cart successfully");
-      setLoadingAddCart((prev: any) => ({ ...prev, [productId]: false }));
+      await dispatch(addProductToCarts(item));
+      setLoadingAddCart((prev) => ({ ...prev, [item.id ?? ""]: false }));
     } catch (err) {
       console.log(err);
-      setLoadingAddCart((prev: any) => ({
-        ...prev,
-        [productId]: false,
-      }));
+      setLoadingAddCart((prev) => ({ ...prev, [item.id ?? ""]: false }));
     }
-    setLoadingAddCart((prev: any) => ({
-      ...prev,
-      [productId]: false,
-    }));
   };
   // context
   const context = useContext(myContext) as Props;
