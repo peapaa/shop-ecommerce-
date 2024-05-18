@@ -24,6 +24,7 @@ interface UserSignUp {
   email: string;
   password: string;
   role: string;
+  avatar?: string;
 }
 
 const Login = () => {
@@ -60,6 +61,7 @@ const Login = () => {
           day: "2-digit",
           year: "numeric",
         }),
+        avatar: "https://cdn-icons-png.flaticon.com/128/2202/2202112.png",
       };
       console.log(user);
       const userRefrence = collection(fireDB, "user");

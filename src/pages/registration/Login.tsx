@@ -18,6 +18,7 @@ export interface User {
   time: Date;
   date: string;
   expiration: number;
+  avatar?: string;
 }
 
 interface UserLogin {
@@ -59,7 +60,7 @@ const Login = () => {
               expiration: new Date().getTime() + 24 * 60 * 60 * 1000, // expiration 24 hours 24 * 60 * 60 * 1000
             });
           });
-          if (user !== null) {
+          if (user) {
             // save user on session storage
             sessionStorage.setItem("userSession", JSON.stringify(user));
           }

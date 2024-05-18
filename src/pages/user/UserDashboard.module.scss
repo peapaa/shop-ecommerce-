@@ -4,7 +4,7 @@
 
 .userContainerTop {
   width: 100%;
-  padding: 20px 0;
+  padding-bottom: 20px;
   border-radius: 5px;
   text-align: center;
   border: 1px solid rgba(252, 228, 236, 1.1);
@@ -69,6 +69,12 @@
   color: black;
   font-size: 16px;
   font-weight: 500;
+}
+.changeImage {
+  padding-top: 25px;
+  width: 110px;
+  object-fit: cover;
+  cursor: pointer;
 }
 @media only screen and (min-width: 850px) and (max-width: 1000px) {
   .orderInfoProductPrice {
