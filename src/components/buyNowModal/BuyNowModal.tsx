@@ -3,6 +3,7 @@ import { Timestamp } from "firebase/firestore";
 import React from "react";
 import { BuyProductOrder } from "../../pages/cart/CartPage";
 import Loader from "../loader/Loader";
+import { useNavigate } from "react-router-dom";
 interface BuyNowModalProps {
   loading: boolean;
   openModal: boolean;
@@ -36,7 +37,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
 }) => {
   console.log("addressInfo", addressInfo);
   console.log(loading);
-
+  const navigate = useNavigate();
   return (
     <div>
       <Modal
@@ -57,6 +58,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
               year: "numeric",
             }),
           });
+          navigate("/user-dashboard");
         }}
         onOk={() => {
           // call function order send order to firebase
