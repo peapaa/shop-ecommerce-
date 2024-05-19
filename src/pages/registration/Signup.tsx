@@ -10,6 +10,7 @@ import { auth, fireDB } from "../../firebase/FirebaseConfig";
 import { Timestamp, Unsubscribe, addDoc, collection } from "firebase/firestore";
 import { Product } from "../../components/admin/AddProductPage";
 import { User } from "./Login";
+import { UserDetail } from "../../context/myState";
 
 export interface Props {
   loading: boolean;
@@ -18,6 +19,8 @@ export interface Props {
   getAllProductFunction: () => Promise<(() => Unsubscribe) | undefined>;
   user: User | null;
   getAllOrder: any[];
+  getAllOrderFunction: () => Promise<(() => Unsubscribe) | undefined>;
+  getAllUser: UserDetail[];
 }
 
 interface UserSignUp {

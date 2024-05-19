@@ -47,6 +47,7 @@ const ProductDetail: React.FC = () => {
       console.log(err);
       setLoading(false);
     }
+    setLoading(false);
   };
 
   // data table
@@ -97,6 +98,7 @@ const ProductDetail: React.FC = () => {
     {
       title: "Product Price",
       dataIndex: "price",
+      render: (price) => <>${price}</>,
       sorter: (a: DataType, b: DataType) => a.price - b.price,
     },
     {

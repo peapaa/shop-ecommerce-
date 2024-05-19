@@ -17,6 +17,7 @@ export interface Product {
   quantity: number;
   date: string;
   id?: string;
+  uid?: string;
 }
 const UpdateProductPage = () => {
   // context

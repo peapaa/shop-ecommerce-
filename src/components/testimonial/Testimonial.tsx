@@ -19,13 +19,13 @@ const Testimonial = () => {
           <img
             alt="testimonial"
             className={styles.testimonial__itemImg}
-            src="https://ecommerce-sk.vercel.app/img/kamal.png"
+            src="https://tse3.mm.bing.net/th?id=OIP.xMFp1iD0VXCH-_Xj-QRTqQHaHa&pid=Api&P=0&h=180"
           />
           <p className={styles.testimonial__itemDesc}>
-            Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki
-            taxidermy 90's cronut +1 kinfolk. Single-origin coffee ennui shaman
-            taiyaki vape DIY tote bag drinking vinegar cronut adaptogen squid
-            fanny pack vaporware.
+            It's rare to come across a product that combines functionality with
+            such elegance, and I am truly grateful to have found it. Thank you
+            for creating something that brings both joy and utility into my
+            life.
           </p>
           <span
             style={{
@@ -36,9 +36,7 @@ const Testimonial = () => {
             }}
           />
 
-          <h2 className={styles.testimonial__item__text}>
-            Kamal Nayan Upadhyay
-          </h2>
+          <h2 className={styles.testimonial__item__text}>Mr.Shara</h2>
           <p className={styles.testimonial__item__textAfter}>
             Senior Product Designer
           </p>
@@ -51,10 +49,9 @@ const Testimonial = () => {
             src="https://www.devknus.com/img/gawri.png"
           />
           <p className={styles.testimonial__itemDesc}>
-            Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki
-            taxidermy 90's cronut +1 kinfolk. Single-origin coffee ennui shaman
-            taiyaki vape DIY tote bag drinking vinegar cronut adaptogen squid
-            fanny pack vaporware.
+            I wanted to take a moment to express my sincere gratitude for the
+            outstanding product you've provided. From the moment I unwrapped it,
+            I could tell that it was crafted with care and precision.
           </p>
           <span
             style={{
@@ -64,7 +61,7 @@ const Testimonial = () => {
               borderRadius: "5px",
             }}
           />
-          <h2 className={styles.testimonial__item__text}>S Mishra</h2>
+          <h2 className={styles.testimonial__item__text}>Mr.Sung</h2>
           <p className={styles.testimonial__item__textAfter}>UI Develeoper</p>
         </div>
 
@@ -73,13 +70,12 @@ const Testimonial = () => {
           <img
             alt="testimonial"
             className={styles.testimonial__itemImg}
-            src="https://firebasestorage.googleapis.com/v0/b/devknus-official-database.appspot.com/o/images%2FScreenshot%202023-07-07%20at%202.20.32%20PM-modified.png?alt=media&token=324ddd80-2b40-422c-9f1c-1c1fa34943fa"
+            src="https://cdn.pixabay.com/photo/2017/01/31/22/06/doctor-2027615_1280.png"
           />
           <p className={styles.testimonial__itemDesc}>
-            Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki
-            taxidermy 90's cronut +1 kinfolk. Single-origin coffee ennui shaman
-            taiyaki vape DIY tote bag drinking vinegar cronut adaptogen squid
-            fanny pack vaporware.
+            I would like to extend my heartfelt gratitude for providing such a
+            high-quality product. I was immediately impressed by the attention
+            to detail and the level of craftsmanship evident in every aspect.
           </p>
           <span
             style={{
@@ -89,7 +85,7 @@ const Testimonial = () => {
               borderRadius: "5px",
             }}
           />
-          <h2 className={styles.testimonial__item__text}>XYZ </h2>
+          <h2 className={styles.testimonial__item__text}>Mr.Thomas AnDre </h2>
           <p className={styles.testimonial__item__textAfter}>CTO</p>
         </div>
       </div>

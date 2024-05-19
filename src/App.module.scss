@@ -61,16 +61,15 @@
   align-items: center;
 }
 
-.search__dropImage {
-  height: 100%;
-  width: 32px;
-  padding: 6px;
-  border-radius: 5px;
-}
-
 .search__dropName {
   font-size: 15px;
   font-weight: 400;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .search__dropIcon {
@@ -85,7 +84,7 @@
 .search__dropImage {
   width: 50px;
   height: 50px;
-  padding: 6px 0;
+  padding: 6px 8px;
   object-fit: cover;
 }
 .mainContent {
@@ -236,7 +235,9 @@
 }
 .testimonial__itemImg {
   width: 60px;
-  object-fit: cover;
+  height: 60px;
+  border-radius: 50px;
+  object-fit: contain;
 }
 .testimonial__itemDesc {
   color: gray;

@@ -9,6 +9,7 @@ import { setDoc, query, collection, where, getDocs } from "firebase/firestore";
 import { storage, fireDB } from "../../firebase/FirebaseConfig";
 import myContext from "../../context/myContext";
 import { Props } from "../registration/Signup";
+import { Product } from "../../components/admin/UpdateProductPage";
 
 const UserDashboard = () => {
   // get user information from session storage
@@ -149,7 +150,7 @@ const UserDashboard = () => {
 
           {productOrders.map((orders) => {
             const { status } = orders;
-            return orders.products.map((product: any) => (
+            return orders.products.map((product: Product) => (
               <div className={styles.orderContainer} key={product.id}>
                 <div className={styles.orderInfoLeft}>
                   <div className="">
@@ -166,7 +167,7 @@ const UserDashboard = () => {
                     <b>Total Amount</b>
                   </div>
                   <div className={styles.orderInformation}>
-                    ${product.price * product.quantity}
+                    ${parseInt(product.price) * product.quantity}
                   </div>
 
                   <div className="">

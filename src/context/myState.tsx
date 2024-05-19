@@ -4,12 +4,22 @@ import { Product } from "../components/admin/AddProductPage";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { fireDB } from "../firebase/FirebaseConfig";
 
+export interface UserDetail {
+  name: string;
+  email: string;
+  uid: string;
+  role: string;
+  time: Date;
+  date: string;
+  avatar: string;
+}
 function MyState({ children }: { children: any }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [getAllProduct, setGetAllProduct] = useState<Product[]>([]);
   const [getAllOrder, setGetAllOrder] = useState<any[]>([]);
+  const [getAllUser, setGetAllUser] = useState<UserDetail[]>([]);
 
-  console.log("getAllOrder", getAllOrder);
+  console.log("getAllProduct", getAllProduct);
   // all products
   const getAllProductFunction = async () => {
     setLoading(true);
@@ -31,6 +41,7 @@ function MyState({ children }: { children: any }) {
     setLoading(false);
   };
 
+  // get all orders
   const getAllOrderFunction = async () => {
     setLoading(true);
     try {
@@ -50,12 +61,35 @@ function MyState({ children }: { children: any }) {
     }
     setLoading(false);
   };
+
+  // get all user
+  const getAllUserFunction = async () => {
+    setLoading(true);
+    try {
+      const q = query(collection(fireDB, "user"), orderBy("time"));
+      const data = onSnapshot(q, (QuerySnapshot) => {
+        let userArray: any = [];
+        QuerySnapshot.forEach((doc) => {
+          userArray.push({ ...doc.data() });
+        });
+        setGetAllUser(userArray);
+        setLoading(false);
+      });
+      return () => data;
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+    setLoading(false);
+  };
+
   // run function
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       await getAllProductFunction();
       await getAllOrderFunction();
+      await getAllUserFunction();
       setLoading(false);
     };
 
@@ -70,6 +104,8 @@ function MyState({ children }: { children: any }) {
         getAllProduct,
         getAllProductFunction,
         getAllOrder,
+        getAllOrderFunction,
+        getAllUser,
       }}
     >
       {children}
