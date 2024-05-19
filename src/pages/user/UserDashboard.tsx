@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import styles from "./UserDashboard.module.scss";
@@ -7,10 +7,22 @@ import { message } from "antd";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { setDoc, query, collection, where, getDocs } from "firebase/firestore";
 import { storage, fireDB } from "../../firebase/FirebaseConfig";
+import myContext from "../../context/myContext";
+import { Props } from "../registration/Signup";
 
 const UserDashboard = () => {
+  // get user information from session storage
   const userString = sessionStorage.getItem("userSession");
   const user: User | null = userString ? JSON.parse(userString) : null;
+
+  // get getAllOrder from context
+  const context = useContext(myContext) as Props;
+  const { getAllOrder } = context;
+
+  // filter products ordered
+  const productOrders = getAllOrder.filter((item) => item.userId === user?.uid);
+  console.log("productOrders", productOrders);
+
   const [imageUrl, setImageUrl] = useState<string>("");
   console.log("imageUrl", imageUrl);
   useEffect(() => {
@@ -91,20 +103,6 @@ const UserDashboard = () => {
     );
   };
 
-  const products = [
-    {
-      id: 1,
-      name: "Nike Air Force 1 07 LV8",
-      imageSrc:
-        "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/54a510de-a406-41b2-8d62-7f8c587c9a7e/air-force-1-07-lv8-shoes-9KwrSk.png",
-      href: "#",
-      price: "₹61,999",
-      color: "Orange",
-      imageAlt: "Nike Air Force 1 07 LV8",
-      quantity: 1,
-    },
-  ];
-
   return (
     <Layout>
       <div className={styles.userContainer}>
@@ -149,58 +147,62 @@ const UserDashboard = () => {
         <div className={styles.userContainerBottom}>
           <h2 className={styles.OrderTitle}>Order Details</h2>
 
-          <div className={styles.orderContainer}>
-            <div className={styles.orderInfoLeft}>
-              <div className="">
-                <b>Order Id</b>
-              </div>
-              <div className={styles.orderInformation}>#74557994327</div>
+          {productOrders.map((orders) => {
+            const { status } = orders;
+            return orders.products.map((product: any) => (
+              <div className={styles.orderContainer} key={product.id}>
+                <div className={styles.orderInfoLeft}>
+                  <div className="">
+                    <b>Order Id</b>
+                  </div>
+                  <div className={styles.orderInformation}>{product.id}</div>
 
-              <div>
-                <b>Date</b>
-              </div>
-              <div className={styles.orderInformation}>4 March, 2023</div>
+                  <div>
+                    <b>Date</b>
+                  </div>
+                  <div className={styles.orderInformation}>{product.date}</div>
 
-              <div>
-                <b>Total Amount</b>
-              </div>
-              <div className={styles.orderInformation}>₹84,499</div>
+                  <div>
+                    <b>Total Amount</b>
+                  </div>
+                  <div className={styles.orderInformation}>
+                    ${product.price * product.quantity}
+                  </div>
 
-              <div className="">
-                <b>Order Status</b>
-              </div>
-              <div>Confirmed</div>
-            </div>
+                  <div className="">
+                    <b>Order Status</b>
+                  </div>
+                  <div>{status}</div>
+                </div>
 
-            <div className={styles.orderInfoRight}>
-              {products.map((product) => (
-                <div key={product.id}>
-                  <div className={styles.orderProductInfo}>
-                    <img
-                      className={styles.orderProductImg}
-                      src={product.imageSrc}
-                      alt={product.imageSrc}
-                    />
+                <div className={styles.orderInfoRight}>
+                  <div>
+                    <div className={styles.orderProductInfo}>
+                      <img
+                        className={styles.orderProductImg}
+                        src={product.productImageUrl}
+                        alt={product.title}
+                      />
 
-                    <div className={styles.orderProductDetail}>
-                      <div>
-                        <div className="">
-                          <b>{product.name}</b>
+                      <div className={styles.orderProductDetail}>
+                        <div>
+                          <div className="">
+                            <b>{product.title}</b>
+                          </div>
+                          <p>x {product.quantity}</p>
                         </div>
-                        <p>{product.color}</p>
-                        <p>x {product.quantity}</p>
-                      </div>
-                      <div>
-                        <b className={styles.orderInfoProductPrice}>
-                          {product.price}
-                        </b>
+                        <div>
+                          <b className={styles.orderInfoProductPrice}>
+                            Price: ${product.price}
+                          </b>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            ));
+          })}
         </div>
       </div>
     </Layout>

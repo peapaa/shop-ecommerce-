@@ -17,6 +17,7 @@ export interface Props {
   getAllProduct: Product[];
   getAllProductFunction: () => Promise<(() => Unsubscribe) | undefined>;
   user: User | null;
+  getAllOrder: any[];
 }
 
 interface UserSignUp {
