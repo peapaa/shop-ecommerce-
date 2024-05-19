@@ -58,7 +58,6 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
               year: "numeric",
             }),
           });
-          navigate("/user-dashboard");
         }}
         onOk={() => {
           // call function order send order to firebase
@@ -83,6 +82,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
                 year: "numeric",
               }),
             });
+            navigate("/user-dashboard");
           }
         }}
       >
