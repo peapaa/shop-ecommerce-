@@ -12,9 +12,7 @@ const HomePage = () => {
       <Layout>
         <HeroSection />
         <Category />
-
         <HomePageProductCard />
-
         <Track />
         <Testimonial />
         <Footer />

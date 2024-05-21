@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Table } from "antd";
-import type { TableColumnsType, TableProps } from "antd";
+import type { TableColumnsType } from "antd";
 import styles from "../../App.module.scss";
 import myContext from "../../context/myContext";
 import { Props } from "../../pages/registration/Signup";
@@ -21,15 +21,6 @@ export interface DataType {
   productImageUrl: string;
   quantity: number;
 }
-
-const onChange: TableProps<DataType>["onChange"] = (
-  pagination,
-  filters,
-  sorter,
-  extra
-) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
 
 const OrderDetail: React.FC = () => {
   const context = useContext(myContext) as Props;
@@ -136,7 +127,7 @@ const OrderDetail: React.FC = () => {
         <h2 style={{ textAlign: "center" }}>All Orders </h2>
         {loading && <Loader />}
       </div>
-      <Table columns={columns} dataSource={data} onChange={onChange} />
+      <Table columns={columns} dataSource={data} />
     </div>
   );
 };

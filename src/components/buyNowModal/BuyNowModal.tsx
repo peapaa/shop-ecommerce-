@@ -4,6 +4,13 @@ import React from "react";
 import { BuyProductOrder } from "../../pages/cart/CartPage";
 import Loader from "../loader/Loader";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import {
+  ProductCart,
+  deleteProductFromCart,
+  useAppDispatch,
+} from "../../redux/cartSlice";
 interface BuyNowModalProps {
   loading: boolean;
   openModal: boolean;
@@ -38,6 +45,17 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
   console.log("addressInfo", addressInfo);
   console.log(loading);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const products = useSelector((state: RootState) => state.cart);
+  console.log("products from call buy modal", products);
+  const clearCartAfterBuy = (products: ProductCart[]) => {
+    if (products.length >= 1) {
+      products.forEach((product) => {
+        dispatch(deleteProductFromCart(product));
+      });
+    }
+  };
   return (
     <div>
       <Modal
@@ -82,6 +100,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
                 year: "numeric",
               }),
             });
+            clearCartAfterBuy(products);
             navigate("/user-dashboard");
           }
         }}

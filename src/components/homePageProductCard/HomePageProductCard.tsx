@@ -53,7 +53,7 @@ const HomePageProductCard = () => {
 
       {/* Main */}
       <section className={styles.product__card__container}>
-        {getAllProduct.map((item, index) => {
+        {getAllProduct.slice(0, 8).map((item, index) => {
           const { productImageUrl, title, price, id } = item;
           return (
             <Card

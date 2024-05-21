@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { Table, message } from "antd";
-import type { TableColumnsType, TableProps } from "antd";
+import { Table, Input, message } from "antd";
+import type { TableColumnsType } from "antd";
 import { Link } from "react-router-dom";
 import styles from "../../App.module.scss";
 import myContext from "../../context/myContext";
@@ -8,6 +8,8 @@ import { Props } from "../../pages/registration/Signup";
 import Loader from "../loader/Loader";
 import { fireDB } from "../../firebase/FirebaseConfig";
 import { deleteDoc, doc } from "firebase/firestore";
+import { FilterDropdownProps } from "antd/es/table/interface";
+import { SearchOutlined } from "@ant-design/icons";
 
 interface DataType {
   key?: number;
@@ -20,15 +22,6 @@ interface DataType {
   productImageUrl: string;
   quantity: string | number;
 }
-
-const onChange: TableProps<DataType>["onChange"] = (
-  pagination,
-  filters,
-  sorter,
-  extra
-) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
 
 const ProductDetail: React.FC = () => {
   const context = useContext(myContext) as Props;
@@ -84,16 +77,42 @@ const ProductDetail: React.FC = () => {
     {
       title: "Product Title",
       dataIndex: "title",
-      filterSearch: true,
-      onFilter: (value, record: DataType) =>
-        record.title.startsWith(value as string),
     },
     {
       title: "Product Category",
       dataIndex: "category",
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+      }: FilterDropdownProps) => {
+        return (
+          <>
+            <Input
+              autoFocus
+              placeholder="Search category"
+              value={selectedKeys[0]}
+              onChange={(e) =>
+                setSelectedKeys(e.target.value ? [e.target.value] : [])
+              }
+              onPressEnter={() => {
+                confirm();
+              }}
+              onBlur={() => {
+                confirm();
+              }}
+              style={{ width: 140 }}
+            ></Input>
+          </>
+        );
+      },
       filterSearch: true,
-      onFilter: (value, record: DataType) =>
-        record.category.startsWith(value as string),
+      filterIcon: () => {
+        return <SearchOutlined />;
+      },
+      onFilter: (value: any, record: DataType) => {
+        return record.category.toLowerCase().includes(value.toLowerCase());
+      },
     },
     {
       title: "Product Price",
@@ -152,7 +171,7 @@ const ProductDetail: React.FC = () => {
           <button className={styles.product__card__itemBtn}>Add Product</button>
         </Link>
       </div>
-      <Table columns={columns} dataSource={data} onChange={onChange} />
+      <Table columns={columns} dataSource={data} />
     </div>
   );
 };
