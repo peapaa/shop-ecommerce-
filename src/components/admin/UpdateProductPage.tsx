@@ -209,7 +209,7 @@ const UpdateProductPage = () => {
 
         <Form.Item<FieldType>
           name="totalQuantity"
-          label="Quantity"
+          label="Total Quantity"
           rules={[{ required: true, message: "Please input your quantity!" }]}
         >
           <Input

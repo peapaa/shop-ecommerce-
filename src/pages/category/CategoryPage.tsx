@@ -24,9 +24,9 @@ const CategoryPage = () => {
 
   let productCategory: Product[] = [];
   if (typeof categoryName === "string") {
-    productCategory = getAllProduct.filter((product) =>
-      product.category.includes(categoryName)
-    );
+    productCategory = getAllProduct
+      .filter((item) => item.totalQuantity > 0)
+      .filter((product) => product.category.includes(categoryName));
   }
   console.log(productCategory);
   const productForCategoryBoolean = productCategory.length > 0;

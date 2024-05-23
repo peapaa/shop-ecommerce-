@@ -147,6 +147,7 @@ const ProductInfo = () => {
             <h2 className={styles.OtherProduct}>Products of the same type: </h2>
             <section className={styles.product__card__container}>
               {getAllProduct
+                .filter((item) => item.totalQuantity > 0)
                 .filter(
                   (product) =>
                     product.category === categoryProductCurrent &&

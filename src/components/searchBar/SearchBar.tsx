@@ -15,6 +15,7 @@ const SearchBar = () => {
 
   // Filter Search Data
   const filterSearchData = getAllProduct
+    .filter((item) => item.totalQuantity > 0)
     .filter((obj) => obj.title.toLowerCase().includes(search))
     .slice(0, 8);
 

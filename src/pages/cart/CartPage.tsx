@@ -12,7 +12,14 @@ import {
 } from "../../redux/cartSlice";
 import { useContext, useState } from "react";
 import BuyNowModal from "../../components/buyNowModal/BuyNowModal";
-import { Timestamp, addDoc, collection, updateDoc } from "firebase/firestore";
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  doc,
+  updateDoc,
+  writeBatch,
+} from "firebase/firestore";
 import myContext from "../../context/myContext";
 import { Props } from "../registration/Signup";
 import { message } from "antd";
@@ -34,7 +41,7 @@ const CartPage = () => {
 
   // my context
   const context = useContext(myContext) as Props;
-  const { loading, setLoading } = context;
+  const { loading, setLoading, getAllProduct } = context;
   console.log("loading", loading);
   // get product from store
   const products = useSelector((state: RootState) => state.cart);
@@ -49,8 +56,46 @@ const CartPage = () => {
       return true;
     }
   });
-
   console.log("checkQuantityCartValidate", checkQuantityCartValidate);
+
+  // delete quantity products after buy now
+  const getAllProductsAfterBuy = async () => {
+    setLoading(true);
+    try {
+      const parentProduct: ProductCart[] = getAllProduct;
+      const childrenProduct: ProductCart[] = products;
+
+      const resultProduct = parentProduct.map((parentItem) => {
+        const childItem = childrenProduct.find(
+          (childItem) => childItem.id === parentItem.id
+        );
+        if (childItem) {
+          console.log("da vao child product");
+          return {
+            ...parentItem,
+            totalQuantity: parentItem.totalQuantity - childItem.quantity,
+          };
+        }
+        return parentItem;
+      });
+      console.log("resultProduct", resultProduct);
+      const batch = writeBatch(fireDB);
+      const collectionRef = collection(fireDB, "products");
+      resultProduct.forEach((product) => {
+        if (product.id) {
+          const productRef = doc(collectionRef, product.id);
+          batch.update(productRef, { totalQuantity: product.totalQuantity });
+        }
+      });
+      await batch.commit();
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+    setLoading(false);
+  };
+
   const cartItemTotal = products.length;
   const carthandle = (total: number, productCart: any) => {
     return (total += productCart.quantity * productCart.price);
@@ -149,6 +194,7 @@ const CartPage = () => {
           setAddressInfo={setAddressInfo}
           loading={loading}
           buyProductsOrder={buyProductsOrder}
+          getAllProductsAfterBuy={getAllProductsAfterBuy}
         />
       )}
 
@@ -174,7 +220,12 @@ const CartPage = () => {
 
                   <div className={styles.text}>{product.category}</div>
 
-                  <div className={styles.text}>{`$${product.price}`}</div>
+                  <div className={styles.text}>
+                    <b>{`$${product.price}`}</b>
+                  </div>
+                  <div className={styles.text}>
+                    Total products:<b>{` ${product.totalQuantity}`}</b>
+                  </div>
                 </div>
               </div>
 

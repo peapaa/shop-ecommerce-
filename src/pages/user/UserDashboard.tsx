@@ -195,7 +195,7 @@ const UserDashboard = () => {
           <h2 className={styles.OrderTitle}>Order Details</h2>
           {loading && <Loader />}
           {productOrders.map((orders) => {
-            const { status, orderID } = orders;
+            const { status, orderID, date } = orders;
             return orders.products.map((product: Product) => {
               const productID = product.id;
               return (
@@ -209,9 +209,7 @@ const UserDashboard = () => {
                     <div>
                       <b>Date</b>
                     </div>
-                    <div className={styles.orderInformation}>
-                      {product.date}
-                    </div>
+                    <div className={styles.orderInformation}>{date}</div>
 
                     <div>
                       <b>Total Price</b>

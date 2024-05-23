@@ -21,6 +21,7 @@ interface DataType {
   price: number;
   productImageUrl: string;
   quantity: string | number;
+  totalQuantity: number;
 }
 
 const ProductDetail: React.FC = () => {
@@ -55,6 +56,7 @@ const ProductDetail: React.FC = () => {
       price: parseInt(product.price),
       productImageUrl: product.productImageUrl,
       quantity: product.quantity,
+      totalQuantity: product.totalQuantity,
     };
   });
 
@@ -119,6 +121,12 @@ const ProductDetail: React.FC = () => {
       dataIndex: "price",
       render: (price) => <>${price}</>,
       sorter: (a: DataType, b: DataType) => a.price - b.price,
+    },
+    {
+      title: "Total Product",
+      dataIndex: "totalQuantity",
+      render: (totalQuantity) => <>{totalQuantity}</>,
+      sorter: (a: DataType, b: DataType) => a.totalQuantity - b.totalQuantity,
     },
     {
       title: "Product Date",

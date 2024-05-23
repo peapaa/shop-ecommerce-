@@ -32,6 +32,7 @@ interface BuyNowModalProps {
     }>
   >;
   buyProductsOrder: () => Promise<void>;
+  getAllProductsAfterBuy: () => void;
 }
 
 const BuyNowModal: React.FC<BuyNowModalProps> = ({
@@ -41,6 +42,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
   setAddressInfo,
   loading,
   buyProductsOrder,
+  getAllProductsAfterBuy,
 }) => {
   console.log("addressInfo", addressInfo);
   console.log(loading);
@@ -101,6 +103,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
               }),
             });
             clearCartAfterBuy(products);
+            getAllProductsAfterBuy();
             navigate("/user-dashboard");
           }
         }}
