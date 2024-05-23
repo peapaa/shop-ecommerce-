@@ -59,6 +59,12 @@
   background-color: aliceblue;
   display: flex;
   align-items: center;
+  text-decoration: none;
+  color: black;
+}
+
+.search__dropForm:hover {
+  background-color: rgb(154, 241, 212);
 }
 
 .search__dropName {

@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import myContext from "../../context/myContext";
 import { Props } from "../../pages/registration/Signup";
 import Loader from "../loader/Loader";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { fireDB } from "../../firebase/FirebaseConfig";
 export interface Product {
@@ -13,6 +13,7 @@ export interface Product {
   productImageUrl: string;
   category: string;
   description: string;
+  totalQuantity: number;
   quantity: number;
   date: string;
   id?: string;
@@ -31,6 +32,7 @@ const AddProductPage = () => {
     category: "",
     description: "",
     quantity: 1,
+    totalQuantity: 1,
     date: new Date().toLocaleString("en-US", {
       month: "short",
       day: "2-digit",
@@ -45,6 +47,7 @@ const AddProductPage = () => {
     imgUrl?: string;
     typeFashion?: string;
     description?: string;
+    totalQuantity?: number;
   };
   const handleChosenFashion = (value: string) => {
     setProduct({ ...product, category: value.trim() });
@@ -71,7 +74,7 @@ const AddProductPage = () => {
     console.log("Failed:", errorInfo);
   };
   return (
-    <div className={styles.addProductContainer}>
+    <div className={styles.updateProductContainer}>
       <h2 className={styles.regiterTitle}>Add Product</h2>
       {loading && <Loader />}
       <Form
@@ -85,6 +88,7 @@ const AddProductPage = () => {
       >
         <Form.Item<FieldType>
           name="title"
+          label="Title"
           rules={[
             { required: true, message: "Please input your username!" },
             {
@@ -107,6 +111,7 @@ const AddProductPage = () => {
 
         <Form.Item<FieldType>
           name="price"
+          label="Price"
           rules={[{ required: true, message: "Please input your price!" }]}
         >
           <Input
@@ -123,6 +128,7 @@ const AddProductPage = () => {
 
         <Form.Item<FieldType>
           name="imgUrl"
+          label="Url image"
           rules={[{ required: true, message: "Please input your imgUrl!" }]}
         >
           <Input
@@ -138,14 +144,32 @@ const AddProductPage = () => {
         </Form.Item>
 
         <Form.Item<FieldType>
+          name="totalQuantity"
+          label="Quantity"
+          rules={[{ required: true, message: "Please input your quantity!" }]}
+        >
+          <Input
+            placeholder="Product quantity"
+            value={product.totalQuantity}
+            onChange={(e) => {
+              setProduct({
+                ...product,
+                totalQuantity: parseInt(e.target.value.trim(), 10),
+              });
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item<FieldType>
           name="typeFashion"
+          label="Category"
           rules={[
             { required: true, message: "Please input your type of product!" },
           ]}
         >
           <Select
             placeholder="Select Option "
-            style={{ width: 380 }}
+            style={{ width: "100%" }}
             value={product.category}
             onChange={handleChosenFashion}
             options={[
@@ -163,6 +187,7 @@ const AddProductPage = () => {
 
         <Form.Item<FieldType>
           name="description"
+          label="Description"
           rules={[
             { required: true, message: "Please input your description!" },
             {
@@ -175,8 +200,10 @@ const AddProductPage = () => {
             },
           ]}
         >
-          <Input
+          <Input.TextArea
             placeholder="Product description"
+            rows={4}
+            maxLength={1000}
             value={product.description}
             onChange={(e) => {
               setProduct({
@@ -195,6 +222,12 @@ const AddProductPage = () => {
             style={{ display: "block", margin: "auto" }}
           >
             Add Product
+          </Button>
+          <Button
+            className={styles.regiterBtnSubmit}
+            style={{ display: "block", margin: "auto", marginTop: 12 }}
+          >
+            <Link to={"/admin-dashboard"}>Cancel</Link>
           </Button>
         </Form.Item>
       </Form>

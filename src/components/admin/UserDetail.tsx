@@ -15,6 +15,7 @@ interface DataType {
   uid: string;
   role: string;
   date: string;
+  active: string;
 }
 
 const UserDetail: React.FC = () => {
@@ -45,6 +46,32 @@ const UserDetail: React.FC = () => {
     } catch (err) {
       console.log(err);
       message.error("Change role failed");
+    }
+  };
+
+  const handleChangUserActive = async (record: DataType, value: string) => {
+    console.log("record", record);
+    try {
+      const q = query(
+        collection(fireDB, "user"),
+        where("uid", "==", record.uid)
+      );
+      const user = await getDocs(q);
+      console.log("user active from admin dashbroad", user);
+
+      user.forEach((doc) => {
+        if (doc.exists()) {
+          const updatedUser = {
+            ...doc.data(),
+            active: value,
+          };
+          setDoc(doc.ref, updatedUser);
+          message.success(`Update active user to ${value} successfully`);
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      message.error("Change active user failed");
     }
   };
 
@@ -116,6 +143,24 @@ const UserDetail: React.FC = () => {
       },
     },
     {
+      title: "Active ",
+      render: (record: DataType) => {
+        return (
+          <div style={{ color: "red", marginLeft: 12, cursor: "pointer" }}>
+            <Select
+              defaultValue={record.active}
+              style={{ width: 120 }}
+              onChange={(value) => handleChangUserActive(record, value)}
+              options={[
+                { value: "active", label: "active" },
+                { value: "un active", label: "un active" },
+              ]}
+            />
+          </div>
+        );
+      },
+    },
+    {
       title: "Date",
       dataIndex: "date",
     },
@@ -129,6 +174,7 @@ const UserDetail: React.FC = () => {
       uid: user.uid,
       role: user.role,
       date: user.date,
+      active: user.active,
     };
   });
   return (

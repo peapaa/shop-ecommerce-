@@ -12,7 +12,7 @@ import {
 } from "../../redux/cartSlice";
 import { useContext, useState } from "react";
 import BuyNowModal from "../../components/buyNowModal/BuyNowModal";
-import { Timestamp, addDoc, collection } from "firebase/firestore";
+import { Timestamp, addDoc, collection, updateDoc } from "firebase/firestore";
 import myContext from "../../context/myContext";
 import { Props } from "../registration/Signup";
 import { message } from "antd";
@@ -38,6 +38,19 @@ const CartPage = () => {
   console.log("loading", loading);
   // get product from store
   const products = useSelector((state: RootState) => state.cart);
+
+  console.log("products", products);
+
+  // check quantity of cart vs total quantity products
+  const checkQuantityCartValidate = products.every((product) => {
+    if (product.quantity > product.totalQuantity) {
+      return false;
+    } else {
+      return true;
+    }
+  });
+
+  console.log("checkQuantityCartValidate", checkQuantityCartValidate);
   const cartItemTotal = products.length;
   const carthandle = (total: number, productCart: any) => {
     return (total += productCart.quantity * productCart.price);
@@ -110,8 +123,11 @@ const CartPage = () => {
         }),
       };
 
-      const orderBuyRef = collection(fireDB, "order");
-      await addDoc(orderBuyRef, orderBuy);
+      const orderBuyRef = await addDoc(collection(fireDB, "order"), orderBuy);
+      const orderID = orderBuyRef.id;
+
+      // update order infor
+      await updateDoc(orderBuyRef, { orderID });
 
       setLoading(false);
       message.success("order successfully");
@@ -218,7 +234,22 @@ const CartPage = () => {
           </div>
           <button
             className={styles.cartTotalItemBtn}
-            onClick={() => setOpenModal(true)}
+            onClick={() => {
+              if (products.length > 0 && checkQuantityCartValidate === true) {
+                setOpenModal(true);
+              }
+
+              if (products.length > 0 && checkQuantityCartValidate === false) {
+                setOpenModal(false);
+                message.error(
+                  "quantity of cart must be less than the total quantity available"
+                );
+              }
+              if (products.length === 0) {
+                setOpenModal(false);
+                message.error("Not a product, please select a product");
+              }
+            }}
           >
             Buy now
           </button>

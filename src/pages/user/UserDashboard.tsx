@@ -5,11 +5,21 @@ import styles from "./UserDashboard.module.scss";
 import { User } from "../registration/Login";
 import { message } from "antd";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { setDoc, query, collection, where, getDocs } from "firebase/firestore";
+import {
+  setDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { storage, fireDB } from "../../firebase/FirebaseConfig";
 import myContext from "../../context/myContext";
 import { Props } from "../registration/Signup";
 import { Product } from "../../components/admin/UpdateProductPage";
+import { DeleteOutlined } from "@ant-design/icons";
+import Loader from "../../components/loader/Loader";
 
 const UserDashboard = () => {
   // get user information from session storage
@@ -18,14 +28,14 @@ const UserDashboard = () => {
 
   // get getAllOrder from context
   const context = useContext(myContext) as Props;
-  const { getAllOrder } = context;
+  const { getAllOrder, setLoading, loading } = context;
 
   // filter products ordered
   const productOrders = getAllOrder.filter((item) => item.userId === user?.uid);
   console.log("productOrders", productOrders);
 
   const [imageUrl, setImageUrl] = useState<string>("");
-  console.log("imageUrl", imageUrl);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -104,6 +114,42 @@ const UserDashboard = () => {
     );
   };
 
+  // delete order
+  const handleDeleteOrder = async (productID: string, orderID: string) => {
+    console.log("Delete Order ID", productID);
+    console.log("orderID Order ID", orderID);
+
+    setLoading(true);
+    try {
+      const q = query(
+        collection(fireDB, "order"),
+        where("orderID", "==", orderID)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (doc) => {
+        const orderRef = doc.ref;
+        const orderData = doc.data();
+        console.log("Order data: ", orderData);
+        if (orderData.products.length > 1) {
+          const updatedOrderProducts = orderData.products.filter(
+            (product: Product) => product.id !== productID
+          );
+          await updateDoc(orderRef, { products: updatedOrderProducts });
+        } else {
+          await deleteDoc(orderRef);
+        }
+        message.success("Delete order successfully");
+      });
+
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      message.error(" Delete order failed");
+    }
+    setLoading(false);
+  };
+
   return (
     <Layout>
       <div className={styles.userContainer}>
@@ -147,62 +193,74 @@ const UserDashboard = () => {
 
         <div className={styles.userContainerBottom}>
           <h2 className={styles.OrderTitle}>Order Details</h2>
-
+          {loading && <Loader />}
           {productOrders.map((orders) => {
-            const { status } = orders;
-            return orders.products.map((product: Product) => (
-              <div className={styles.orderContainer} key={product.id}>
-                <div className={styles.orderInfoLeft}>
-                  <div className="">
-                    <b>Order Id</b>
-                  </div>
-                  <div className={styles.orderInformation}>{product.id}</div>
+            const { status, orderID } = orders;
+            return orders.products.map((product: Product) => {
+              const productID = product.id;
+              return (
+                <div className={styles.orderContainer} key={product.id}>
+                  <div className={styles.orderInfoLeft}>
+                    <div className="">
+                      <b>Order Id</b>
+                    </div>
+                    <div className={styles.orderInformation}>{orderID}</div>
 
-                  <div>
-                    <b>Date</b>
-                  </div>
-                  <div className={styles.orderInformation}>{product.date}</div>
+                    <div>
+                      <b>Date</b>
+                    </div>
+                    <div className={styles.orderInformation}>
+                      {product.date}
+                    </div>
 
-                  <div>
-                    <b>Total Amount</b>
-                  </div>
-                  <div className={styles.orderInformation}>
-                    ${parseInt(product.price) * product.quantity}
+                    <div>
+                      <b>Total Price</b>
+                    </div>
+                    <div className={styles.orderInformation}>
+                      ${parseInt(product.price) * product.quantity}
+                    </div>
+
+                    <div className="">
+                      <b>Order Status</b>
+                    </div>
+                    <div>{status}</div>
                   </div>
 
-                  <div className="">
-                    <b>Order Status</b>
-                  </div>
-                  <div>{status}</div>
-                </div>
+                  <div className={styles.orderInfoRight}>
+                    <div>
+                      <div className={styles.orderProductInfo}>
+                        <img
+                          className={styles.orderProductImg}
+                          src={product.productImageUrl}
+                          alt={product.title}
+                        />
 
-                <div className={styles.orderInfoRight}>
-                  <div>
-                    <div className={styles.orderProductInfo}>
-                      <img
-                        className={styles.orderProductImg}
-                        src={product.productImageUrl}
-                        alt={product.title}
-                      />
-
-                      <div className={styles.orderProductDetail}>
-                        <div>
-                          <div className="">
-                            <b>{product.title}</b>
+                        <div className={styles.orderProductDetail}>
+                          <div>
+                            <div className="">
+                              <b>{product.title}</b>
+                            </div>
+                            <p>x {product.quantity}</p>
+                            <b className={styles.orderInfoProductPrice}>
+                              Price: ${product.price}
+                            </b>
                           </div>
-                          <p>x {product.quantity}</p>
-                        </div>
-                        <div>
-                          <b className={styles.orderInfoProductPrice}>
-                            Price: ${product.price}
-                          </b>
+                          <div className={styles.deleteOrderIcon}>
+                            <DeleteOutlined
+                              onClick={() => {
+                                if (productID) {
+                                  handleDeleteOrder(productID, orderID);
+                                }
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ));
+              );
+            });
           })}
         </div>
       </div>

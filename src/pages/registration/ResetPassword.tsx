@@ -16,6 +16,7 @@ export interface User {
   role: string;
   time: Date;
   date: string;
+  active: string;
 }
 
 interface Email {

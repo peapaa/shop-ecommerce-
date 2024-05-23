@@ -1,7 +1,8 @@
+import _debounce from "lodash/debounce";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
 import styles from "./Register.module.scss";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import myContext from "../../context/myContext";
 import Loader from "../../components/loader/Loader";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -19,6 +20,7 @@ export interface User {
   date: string;
   expiration: number;
   avatar?: string;
+  active: string;
 }
 
 interface UserLogin {
@@ -60,23 +62,35 @@ const Login = () => {
               expiration: new Date().getTime() + 24 * 60 * 60 * 1000, // expiration 24 hours 24 * 60 * 60 * 1000
             });
           });
+          console.log("user check active", user);
+          // console.log("user check active", user?.avatar);
           if (user) {
-            // save user on session storage
+            // Save user on session storage
             sessionStorage.setItem("userSession", JSON.stringify(user));
+            const userString = sessionStorage.getItem("userSession");
+            const userCurrent: User | null = userString
+              ? JSON.parse(userString)
+              : null;
+
+            if (userCurrent?.active === "active") {
+              setUserLogin({
+                email: "",
+                password: "",
+              });
+              message.success("Login successful");
+              setLoading(false);
+              // Dispatch function get data from firebase
+              dispatch(getProductCarts());
+              navigate("/");
+            } else {
+              sessionStorage.removeItem("userSession");
+              message.error("Your account is not active");
+              setLoading(false);
+            }
+          } else {
+            message.error("User not found.");
+            setLoading(false);
           }
-          setUserLogin({
-            email: "",
-            password: "",
-          });
-          message.success("Login successful");
-
-          // dispatch function get data from firebase
-          dispatch(getProductCarts());
-          setLoading(false);
-
-          navigate("/");
-          // window.location.reload();
-          console.log("QuerySnapshot", QuerySnapshot);
         });
 
         return () => data;
@@ -90,7 +104,13 @@ const Login = () => {
       setLoading(false);
       message.error("Wrong email or password, please try again.");
     }
+    setLoading(false);
   };
+
+  // hạn chế việc call api login 1s 1 lần
+  const debouncedLogin = useCallback(_debounce(userLoginFunction, 1000), [
+    userLogin,
+  ]);
   return (
     <div className={styles.regiterContainer}>
       <h2 className={styles.regiterTitle}>Login</h2>
@@ -99,7 +119,7 @@ const Login = () => {
         name="basic"
         labelCol={{ span: 5 }}
         style={{ maxWidth: 600 }}
-        onFinish={userLoginFunction}
+        onFinish={debouncedLogin}
         autoComplete="off"
         className={styles.regiterForm}
       >

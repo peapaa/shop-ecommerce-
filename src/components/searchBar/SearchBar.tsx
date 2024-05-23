@@ -3,6 +3,7 @@ import styles from "../../App.module.scss";
 import { Input } from "antd";
 import myContext from "../../context/myContext";
 import { Props } from "../../pages/registration/Signup";
+import { Link } from "react-router-dom";
 
 const SearchBar = () => {
   // my context
@@ -39,7 +40,10 @@ const SearchBar = () => {
                 {filterSearchData.map((item, index) => {
                   return (
                     <div key={index} className={styles.search__dropItem}>
-                      <div className={styles.search__dropForm}>
+                      <Link
+                        to={`/productinfo/${item.id}`}
+                        className={styles.search__dropForm}
+                      >
                         <img
                           className={styles.search__dropImage}
                           src={item.productImageUrl}
@@ -48,7 +52,7 @@ const SearchBar = () => {
                         <span className={styles.search__dropName}>
                           {item.title}
                         </span>
-                      </div>
+                      </Link>
                     </div>
                   );
                 })}

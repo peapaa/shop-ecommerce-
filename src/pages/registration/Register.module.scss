@@ -19,9 +19,18 @@
 .addProductContainer {
   width: 420px;
   margin: auto !important;
-
   position: relative;
   top: 100px;
+  background-color: rgb(248, 204, 219);
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.updateProductContainer {
+  width: 520px;
+  margin: auto !important;
+  position: relative;
+  top: 20px;
   background-color: rgb(248, 204, 219);
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -33,7 +42,7 @@
 }
 
 .regiterForm {
-  padding: 12px 20px;
+  padding: 12px 20px 4px 12px;
 }
 
 .regiterBtn {
@@ -44,15 +53,38 @@
 }
 .regiterBtnSubmit {
   background-color: rgb(231, 50, 114);
+  color: #fff;
+  width: 240px;
 }
 .regiterBtnSubmit span {
-  padding: 0 60px !important;
+  padding: 0 20px !important;
 }
 .regiterBtnSubmit:hover {
   background-color: rgb(231, 50, 114) !important;
+  color: #fff !important;
+  border: none !important;
 }
 
 .regiterText {
   font-size: 16px;
   font-weight: 500;
+}
+
+@media only screen and (max-width: 767px) {
+  .updateProductContainer {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .updateProductContainer {
+    width: 90%;
+  }
+  .regiterBtnSubmit {
+    width: 160px;
+  }
+  .regiterBtnSubmit span {
+    padding: 0 !important;
+    text-align: center;
+  }
 }

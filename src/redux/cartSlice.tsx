@@ -21,6 +21,7 @@ export interface ProductCart {
   category: string;
   description: string;
   quantity: number;
+  totalQuantity: number;
   date: string;
   id?: string;
   uid?: string;
@@ -303,7 +304,7 @@ export const deleteProductFromCart = createAsyncThunk<
           const updatedData = doc.data();
           deleteDoc(doc.ref);
           updatedItem = updatedData as ProductCart;
-          message.success("delete to cart successfully");
+          // message.success("delete to cart successfully");
         }
       });
       return updatedItem;

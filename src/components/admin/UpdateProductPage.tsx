@@ -4,7 +4,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import myContext from "../../context/myContext";
 import { Props } from "../../pages/registration/Signup";
 import Loader from "../loader/Loader";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { fireDB } from "../../firebase/FirebaseConfig";
 
@@ -18,6 +18,7 @@ export interface Product {
   date: string;
   id?: string;
   uid?: string;
+  totalQuantity: number;
 }
 const UpdateProductPage = () => {
   // context
@@ -36,6 +37,7 @@ const UpdateProductPage = () => {
     category: "",
     description: "",
     quantity: 1,
+    totalQuantity: 1,
     date: new Date().toLocaleString("en-US", {
       month: "short",
       day: "2-digit",
@@ -50,6 +52,7 @@ const UpdateProductPage = () => {
     imgUrl?: string;
     typeFashion?: string;
     description?: string;
+    totalQuantity?: number;
   };
   const handleChosenFashion = (value: string) => {
     setProduct({ ...product, category: value.trim() });
@@ -76,6 +79,7 @@ const UpdateProductPage = () => {
         description: product?.description,
         quantity: product?.quantity,
         date: product?.date,
+        totalQuantity: product?.totalQuantity,
       });
 
       form.setFieldsValue({
@@ -84,6 +88,7 @@ const UpdateProductPage = () => {
         imgUrl: product?.productImageUrl,
         typeFashion: product?.category,
         description: product?.description,
+        totalQuantity: product?.totalQuantity,
       });
       setLoading(false);
     } catch (err) {
@@ -124,9 +129,9 @@ const UpdateProductPage = () => {
   };
 
   return (
-    <div className={styles.addProductContainer}>
-      <h2 className={styles.regiterTitle}>Update Product</h2>
+    <div className={styles.updateProductContainer}>
       {loading && <Loader />}
+      <h2 className={styles.regiterTitle}>Update Product</h2>
       <Form
         form={form}
         name="basic"
@@ -142,10 +147,12 @@ const UpdateProductPage = () => {
           imgUrl: product.productImageUrl,
           typeFashion: product.category,
           description: product.description,
+          totalQuantity: product.totalQuantity,
         }}
       >
         <Form.Item<FieldType>
           name="title"
+          label="Title"
           rules={[
             { required: true, message: "Please input your username!" },
             {
@@ -168,6 +175,7 @@ const UpdateProductPage = () => {
 
         <Form.Item<FieldType>
           name="price"
+          label="Price"
           rules={[{ required: true, message: "Please input your price!" }]}
         >
           <Input
@@ -184,6 +192,7 @@ const UpdateProductPage = () => {
 
         <Form.Item<FieldType>
           name="imgUrl"
+          label="Url image"
           rules={[{ required: true, message: "Please input your imgUrl!" }]}
         >
           <Input
@@ -199,14 +208,32 @@ const UpdateProductPage = () => {
         </Form.Item>
 
         <Form.Item<FieldType>
+          name="totalQuantity"
+          label="Quantity"
+          rules={[{ required: true, message: "Please input your quantity!" }]}
+        >
+          <Input
+            placeholder="Product quantity"
+            value={product.totalQuantity}
+            onChange={(e) => {
+              setProduct({
+                ...product,
+                totalQuantity: parseInt(e.target.value.trim(), 10),
+              });
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item<FieldType>
           name="typeFashion"
+          label="Category"
           rules={[
             { required: true, message: "Please input your type of product!" },
           ]}
         >
           <Select
             placeholder="Select Option "
-            style={{ width: 380 }}
+            style={{ width: "100%" }}
             value={product.category}
             onChange={handleChosenFashion}
             options={[
@@ -224,6 +251,7 @@ const UpdateProductPage = () => {
 
         <Form.Item<FieldType>
           name="description"
+          label="Description"
           rules={[
             { required: true, message: "Please input your description!" },
             {
@@ -236,8 +264,10 @@ const UpdateProductPage = () => {
             },
           ]}
         >
-          <Input
+          <Input.TextArea
             placeholder="Product description"
+            rows={4}
+            maxLength={1000}
             value={product.description}
             onChange={(e) => {
               setProduct({
@@ -256,6 +286,12 @@ const UpdateProductPage = () => {
             style={{ display: "block", margin: "auto" }}
           >
             Update Product
+          </Button>
+          <Button
+            className={styles.regiterBtnSubmit}
+            style={{ display: "block", margin: "auto", marginTop: 12 }}
+          >
+            <Link to={"/admin-dashboard"}>Cancel</Link>
           </Button>
         </Form.Item>
       </Form>

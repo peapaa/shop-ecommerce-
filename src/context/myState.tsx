@@ -12,6 +12,7 @@ export interface UserDetail {
   time: Date;
   date: string;
   avatar: string;
+  active: string;
 }
 function MyState({ children }: { children: any }) {
   const [loading, setLoading] = useState<boolean>(false);
@@ -19,7 +20,7 @@ function MyState({ children }: { children: any }) {
   const [getAllOrder, setGetAllOrder] = useState<any[]>([]);
   const [getAllUser, setGetAllUser] = useState<UserDetail[]>([]);
 
-  console.log("getAllProduct", getAllProduct);
+  console.log("getAllProduct 23/05", getAllProduct);
   // all products
   const getAllProductFunction = async () => {
     setLoading(true);
